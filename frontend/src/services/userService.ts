@@ -1,0 +1,64 @@
+import { gql } from '@apollo/client';
+import { apolloClient } from '../apollo-client';
+
+export interface User {
+  id: string;
+  username: string;
+  email: string;
+  role: 'ADMIN' | 'USER';
+  createdAt: string;
+}
+
+export const userService = {
+  getUser: async (id: string) => {
+    const { data } = await apolloClient.query({
+      query: gql`
+        query GetUser($id: ID!) {
+          user(id: $id) {
+            id username email role createdAt
+          }
+        }
+      `,
+      variables: { id }
+    });
+    return data.user;
+  },
+
+  getUsers: async () => {
+    const { data } = await apolloClient.query({
+      query: gql`
+        query GetUsers {
+          users {
+            id username email role createdAt
+          }
+        }
+      `
+    });
+    return data.users;
+  },
+
+  login: async (email: string, password: string) => {
+    const { data } = await apolloClient.mutate({
+      mutation: gql`
+        mutation Login($email: String!, $password: String!) {
+          login(email: $email, password: $password) {
+            id username email role
+          }
+        }
+      `,
+      variables: { email, password }
+    });
+    return data.login;
+  },
+
+  logout: async () => {
+    const { data } = await apolloClient.mutate({
+      mutation: gql`
+        mutation Logout {
+          logout
+        }
+      `
+    });
+    return data.logout;
+  }
+};
