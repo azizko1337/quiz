@@ -7,7 +7,7 @@ import Tribal from "@/assets/images/tribal.webp";
 
 <template>
   <Header />
-  <div class="flex gap-10 justify-center items-center min-h-[80vh]">
+  <div class="flex gap-10 justify-center items-center min-h-[70vh]">
     <div>
       <img class="" width="100" :src="Tribal" alt="tribal" />
       <img class="" width="100" :src="Tribal" alt="tribal" />
