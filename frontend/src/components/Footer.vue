@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { RouterLInk } from "vue-router";
+import { RouterLink } from "vue-router";
 import Flame from "@/assets/images/flame.gif";
 </script>
 <template>
-  <footer class="w-full">
+  <footer class="w-full flex flex-col gap-4">
     <div class="p-5 flex justify-center">
       <i
         >Aplikacja wykonana na projekt zaliczeniowy modułu

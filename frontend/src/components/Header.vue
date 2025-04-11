@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { RouterLInk } from "vue-router";
+import { RouterLink } from "vue-router";
 import Logo from "@/assets/images/logo.jpg";
 
 const links = [
   { name: "Strona główna", path: "/" },
-  { name: "Aplikacja mobilna", path: "/about" },
+  { name: "Aplikacja mobilna", path: "/mobile" },
 ];
 </script>
 <template>
