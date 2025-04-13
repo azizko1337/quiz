@@ -31,16 +31,26 @@ export const authMutations = {
 
     // Generate JWT token
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
+      {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
       JWT_SECRET,
       {
         expiresIn: "1d",
       }
     );
 
-    // Add token to response headers
+    // Store token in a cookie instead of header
     if (context.res) {
-      context.res.setHeader("Authorization", `Bearer ${token}`);
+      context.res.cookie("auth_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // Secure in production
+        maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
+        sameSite: "strict",
+      });
     }
 
     // Return user without password
@@ -50,7 +60,7 @@ export const authMutations = {
 
   logout: async (_: any, __: any, context: any) => {
     if (context.res) {
-      context.res.setHeader("Authorization", "");
+      context.res.clearCookie("auth_token");
     }
     return true;
   },

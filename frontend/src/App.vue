@@ -3,6 +3,14 @@ import "@/style.css";
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import Tribal from "@/assets/images/tribal.webp";
+import { useUserStore } from "@/stores/userStore";
+import { onMounted } from "vue";
+
+const userStore = useUserStore();
+
+onMounted(async () => {
+  await userStore.loadUser();
+});
 </script>
 
 <template>

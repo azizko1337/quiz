@@ -7,7 +7,7 @@ import Flame from "@/assets/images/flame.gif";
     <div class="p-5 flex justify-center">
       <i
         >Aplikacja wykonana na projekt zaliczeniowy modułu
-        <b>Projektowanie Webowych Aplikacji Graficznych</b> przez:
+        <b>Projektowanie Webowych Aplikacji Graficznych</b> przez
         <a
           class="text-blue-400 font-bold"
           href="https://azalupka.cc"

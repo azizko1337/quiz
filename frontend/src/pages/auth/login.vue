@@ -2,6 +2,8 @@
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
 import * as z from "zod";
+import { useRouter } from "vue-router";
+import { ref } from "vue";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +15,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useUserStore } from "@/stores/userStore";
+
+const router = useRouter();
+const userStore = useUserStore();
+const loginError = ref<string | null>(null);
 
 const formSchema = toTypedSchema(
   z.object({
@@ -32,8 +39,17 @@ const form = useForm({
   validationSchema: formSchema,
 });
 
-const onSubmit = form.handleSubmit((values) => {
-  console.log("Form submitted!", values);
+const onSubmit = form.handleSubmit(async (values) => {
+  try {
+    loginError.value = null;
+    await userStore.login(values.email, values.password);
+    // Redirect after login
+    router.push("/");
+  } catch (error) {
+    loginError.value =
+      error instanceof Error ? error.message : "Nieprawidłowe dane logowania";
+    console.error(error);
+  }
 });
 </script>
 
@@ -41,13 +57,15 @@ const onSubmit = form.handleSubmit((values) => {
   <section class="flex flex-col gap-10 items-center justify-center">
     <h1 class="text-2xl font-bold">Logowania</h1>
     <form class="flex flex-col gap-4" @submit="onSubmit">
+      <div v-if="loginError" class="text-destructive mb-4">
+        {{ loginError }}
+      </div>
       <FormField v-slot="{ componentField }" name="email">
         <FormItem>
           <FormLabel>Email</FormLabel>
           <FormControl>
             <Input type="text" placeholder="" v-bind="componentField" />
           </FormControl>
-          <!-- <FormDescription> This is your public display name. </FormDescription> -->
           <FormMessage />
         </FormItem>
       </FormField>
@@ -55,14 +73,17 @@ const onSubmit = form.handleSubmit((values) => {
         <FormItem>
           <FormLabel>Hasło</FormLabel>
           <FormControl>
-            <Input type="text" placeholder="" v-bind="componentField" />
+            <Input type="password" placeholder="" v-bind="componentField" />
           </FormControl>
-          <!-- <FormDescription> This is your public display name. </FormDescription> -->
           <FormMessage />
         </FormItem>
       </FormField>
-      <Button class="cursor-pointer shadow-2xl my-4" type="submit">
-        Zaloguj się
+      <Button
+        class="cursor-pointer shadow-2xl my-4"
+        type="submit"
+        :disabled="userStore.isLoading"
+      >
+        {{ userStore.isLoading ? "Logowanie..." : "Zaloguj się" }}
       </Button>
     </form>
     <RouterLink class="text-blue-400" to="/auth/register"

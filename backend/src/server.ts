@@ -26,8 +26,14 @@ async function startServer() {
   await initDatabase();
   await server.start();
 
+  // Configure CORS to allow requests from localhost:5173
+  const corsOptions = {
+    origin: "http://localhost:5173",
+    credentials: true,
+  };
+
   app.use(
-    cors(),
+    cors(corsOptions),
     bodyParser.json(),
     expressMiddleware(server, {
       context: async ({ req, res }) => {
