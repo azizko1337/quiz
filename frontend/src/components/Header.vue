@@ -28,7 +28,15 @@ async function handleLogout() {
         <!-- Auth Links -->
         <template v-if="userStore.user">
           <li>
-            <RouterLink class="p-2" to="/quizzes">Quizy</RouterLink>
+            <RouterLink class="p-2" to="/quizzes">Moje quizy</RouterLink>
+          </li>
+          <li>
+            <RouterLink class="p-2" to="/attempts">Moje podejścia</RouterLink>
+          </li>
+          <li>
+            <RouterLink class="p-2" to="/quizzes/create"
+              >Stwórz quiz</RouterLink
+            >
           </li>
           <li class="flex items-center gap-2 ml-4">
             <span>{{ userStore.user.username }}</span>

@@ -46,7 +46,7 @@ export const authMutations = {
     // Store token in a cookie instead of header
     if (context.res) {
       context.res.cookie("auth_token", token, {
-        httpOnly: true,
+        httpOnly: false,
         secure: process.env.NODE_ENV === "production", // Secure in production
         maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
         sameSite: "strict",
