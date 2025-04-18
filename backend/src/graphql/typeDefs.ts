@@ -18,7 +18,6 @@ export const typeDefs = `#graphql
     title: String!
     description: String
     createdAt: String!
-    author: User!
     public: Boolean!
   }
 

@@ -1,5 +1,5 @@
-import { gql } from '@apollo/client';
-import { apolloClient } from '../apollo-client.ts';
+import { gql } from "@apollo/client/core";
+import { apolloClient } from "../apollo-client.ts";
 
 export interface Answer {
   id: string;
@@ -16,11 +16,16 @@ export const answerService = {
       query: gql`
         query GetAnswer($id: ID!) {
           answer(id: $id) {
-            id questionId answer isCorrect image createdAt
+            id
+            questionId
+            answer
+            isCorrect
+            image
+            createdAt
           }
         }
       `,
-      variables: { id }
+      variables: { id },
     });
     return data.answer;
   },
@@ -30,39 +35,84 @@ export const answerService = {
       query: gql`
         query GetAnswers($questionId: ID!) {
           answers(questionId: $questionId) {
-            id questionId answer isCorrect image createdAt
+            id
+            questionId
+            answer
+            isCorrect
+            image
+            createdAt
           }
         }
       `,
-      variables: { questionId }
+      variables: { questionId },
     });
     return data.answers;
   },
 
-  createAnswer: async (questionId: string, answer: string, isCorrect: boolean, image?: string) => {
+  createAnswer: async (
+    questionId: string,
+    answer: string,
+    isCorrect: boolean,
+    image?: string
+  ) => {
     const { data } = await apolloClient.mutate({
       mutation: gql`
-        mutation CreateAnswer($questionId: ID!, $answer: String!, $isCorrect: Boolean!, $image: String) {
-          createAnswer(questionId: $questionId, answer: $answer, isCorrect: $isCorrect, image: $image) {
-            id questionId answer isCorrect image createdAt
+        mutation CreateAnswer(
+          $questionId: ID!
+          $answer: String!
+          $isCorrect: Boolean!
+          $image: String
+        ) {
+          createAnswer(
+            questionId: $questionId
+            answer: $answer
+            isCorrect: $isCorrect
+            image: $image
+          ) {
+            id
+            questionId
+            answer
+            isCorrect
+            image
+            createdAt
           }
         }
       `,
-      variables: { questionId, answer, isCorrect, image }
+      variables: { questionId, answer, isCorrect, image },
     });
     return data.createAnswer;
   },
 
-  updateAnswer: async (id: string, answer?: string, isCorrect?: boolean, image?: string) => {
+  updateAnswer: async (
+    id: string,
+    answer?: string,
+    isCorrect?: boolean,
+    image?: string
+  ) => {
     const { data } = await apolloClient.mutate({
       mutation: gql`
-        mutation UpdateAnswer($id: ID!, $answer: String, $isCorrect: Boolean, $image: String) {
-          updateAnswer(id: $id, answer: $answer, isCorrect: $isCorrect, image: $image) {
-            id questionId answer isCorrect image createdAt
+        mutation UpdateAnswer(
+          $id: ID!
+          $answer: String
+          $isCorrect: Boolean
+          $image: String
+        ) {
+          updateAnswer(
+            id: $id
+            answer: $answer
+            isCorrect: $isCorrect
+            image: $image
+          ) {
+            id
+            questionId
+            answer
+            isCorrect
+            image
+            createdAt
           }
         }
       `,
-      variables: { id, answer, isCorrect, image }
+      variables: { id, answer, isCorrect, image },
     });
     return data.updateAnswer;
   },
@@ -74,8 +124,8 @@ export const answerService = {
           deleteAnswer(id: $id)
         }
       `,
-      variables: { id }
+      variables: { id },
     });
     return data.deleteAnswer;
-  }
+  },
 };

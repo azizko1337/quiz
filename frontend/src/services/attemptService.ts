@@ -1,5 +1,5 @@
-import { gql } from '@apollo/client';
-import { apolloClient } from '../apollo-client.ts';
+import { gql } from "@apollo/client/core";
+import { apolloClient } from "../apollo-client.ts";
 
 export interface QuizAttempt {
   id: string;
@@ -24,11 +24,15 @@ export const attemptService = {
       query: gql`
         query GetQuizAttempt($id: ID!) {
           quizAttempt(id: $id) {
-            id quizId userId score createdAt
+            id
+            quizId
+            userId
+            score
+            createdAt
           }
         }
       `,
-      variables: { id }
+      variables: { id },
     });
     return data.quizAttempt;
   },
@@ -38,25 +42,37 @@ export const attemptService = {
       query: gql`
         query GetQuizAttempts($userId: ID!) {
           quizAttempts(userId: $userId) {
-            id quizId userId score createdAt
+            id
+            quizId
+            userId
+            score
+            createdAt
           }
         }
       `,
-      variables: { userId }
+      variables: { userId },
     });
     return data.quizAttempts;
   },
 
-  persistQuizAttempt: async (quizId: string, userId: string, score?: number) => {
+  persistQuizAttempt: async (
+    quizId: string,
+    userId: string,
+    score?: number
+  ) => {
     const { data } = await apolloClient.mutate({
       mutation: gql`
         mutation PersistQuizAttempt($quizId: ID!, $userId: ID!, $score: Int) {
           persistQuizAttempt(quizId: $quizId, userId: $userId, score: $score) {
-            id quizId userId score createdAt
+            id
+            quizId
+            userId
+            score
+            createdAt
           }
         }
       `,
-      variables: { quizId, userId, score }
+      variables: { quizId, userId, score },
     });
     return data.persistQuizAttempt;
   },
@@ -81,12 +97,17 @@ export const attemptService = {
             answerId: $answerId
             answerBody: $answerBody
           ) {
-            id questionId quizAttemptId answerId answerBody createdAt
+            id
+            questionId
+            quizAttemptId
+            answerId
+            answerBody
+            createdAt
           }
         }
       `,
-      variables: { questionId, quizAttemptId, answerId, answerBody }
+      variables: { questionId, quizAttemptId, answerId, answerBody },
     });
     return data.persistQuestionAttempt;
-  }
+  },
 };

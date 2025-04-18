@@ -1,6 +1,6 @@
-import { gql } from '@apollo/client';
-import { apolloClient } from '../apollo-client.ts';
-import type { User } from './userService.ts';
+import { gql } from "@apollo/client/core";
+import { apolloClient } from "../apollo-client.ts";
+import type { User } from "./userService.ts";
 
 export interface Quiz {
   id: string;
@@ -18,12 +18,16 @@ export const quizService = {
       query: gql`
         query GetQuiz($id: ID!) {
           quiz(id: $id) {
-            id authorId title description createdAt public
-            author { id username email }
+            id
+            authorId
+            title
+            description
+            createdAt
+            public
           }
         }
       `,
-      variables: { id }
+      variables: { id },
     });
     return data.quiz;
   },
@@ -33,12 +37,16 @@ export const quizService = {
       query: gql`
         query GetQuizzes($authorId: ID) {
           quizzes(authorId: $authorId) {
-            id authorId title description createdAt public
-            author { id username email }
+            id
+            authorId
+            title
+            description
+            createdAt
+            public
           }
         }
       `,
-      variables: { authorId }
+      variables: { authorId },
     });
     return data.quizzes;
   },
@@ -46,13 +54,26 @@ export const quizService = {
   createQuiz: async (authorId: string, title: string, description?: string) => {
     const { data } = await apolloClient.mutate({
       mutation: gql`
-        mutation CreateQuiz($authorId: ID!, $title: String!, $description: String) {
-          createQuiz(authorId: $authorId, title: $title, description: $description) {
-            id authorId title description createdAt public
+        mutation CreateQuiz(
+          $authorId: ID!
+          $title: String!
+          $description: String
+        ) {
+          createQuiz(
+            authorId: $authorId
+            title: $title
+            description: $description
+          ) {
+            id
+            authorId
+            title
+            description
+            createdAt
+            public
           }
         }
       `,
-      variables: { authorId, title, description }
+      variables: { authorId, title, description },
     });
     return data.createQuiz;
   },
@@ -62,11 +83,16 @@ export const quizService = {
       mutation: gql`
         mutation UpdateQuiz($id: ID!, $title: String, $description: String) {
           updateQuiz(id: $id, title: $title, description: $description) {
-            id authorId title description createdAt public
+            id
+            authorId
+            title
+            description
+            createdAt
+            public
           }
         }
       `,
-      variables: { id, title, description }
+      variables: { id, title, description },
     });
     return data.updateQuiz;
   },
@@ -78,8 +104,8 @@ export const quizService = {
           deleteQuiz(id: $id)
         }
       `,
-      variables: { id }
+      variables: { id },
     });
     return data.deleteQuiz;
-  }
+  },
 };

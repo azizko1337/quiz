@@ -1,5 +1,5 @@
-import { gql } from '@apollo/client';
-import { apolloClient } from '../apollo-client.ts';
+import { gql } from "@apollo/client/core";
+import { apolloClient } from "../apollo-client.ts";
 
 export interface Question {
   id: string;
@@ -15,11 +15,15 @@ export const questionService = {
       query: gql`
         query GetQuestion($id: ID!) {
           question(id: $id) {
-            id quizId question image createdAt
+            id
+            quizId
+            question
+            image
+            createdAt
           }
         }
       `,
-      variables: { id }
+      variables: { id },
     });
     return data.question;
   },
@@ -29,11 +33,15 @@ export const questionService = {
       query: gql`
         query GetQuestions($quizId: ID!) {
           questions(quizId: $quizId) {
-            id quizId question image createdAt
+            id
+            quizId
+            question
+            image
+            createdAt
           }
         }
       `,
-      variables: { quizId }
+      variables: { quizId },
     });
     return data.questions;
   },
@@ -41,13 +49,21 @@ export const questionService = {
   createQuestion: async (quizId: string, question: string, image?: string) => {
     const { data } = await apolloClient.mutate({
       mutation: gql`
-        mutation CreateQuestion($quizId: ID!, $question: String!, $image: String) {
+        mutation CreateQuestion(
+          $quizId: ID!
+          $question: String!
+          $image: String
+        ) {
           createQuestion(quizId: $quizId, question: $question, image: $image) {
-            id quizId question image createdAt
+            id
+            quizId
+            question
+            image
+            createdAt
           }
         }
       `,
-      variables: { quizId, question, image }
+      variables: { quizId, question, image },
     });
     return data.createQuestion;
   },
@@ -57,11 +73,15 @@ export const questionService = {
       mutation: gql`
         mutation UpdateQuestion($id: ID!, $question: String, $image: String) {
           updateQuestion(id: $id, question: $question, image: $image) {
-            id quizId question image createdAt
+            id
+            quizId
+            question
+            image
+            createdAt
           }
         }
       `,
-      variables: { id, question, image }
+      variables: { id, question, image },
     });
     return data.updateQuestion;
   },
@@ -73,8 +93,8 @@ export const questionService = {
           deleteQuestion(id: $id)
         }
       `,
-      variables: { id }
+      variables: { id },
     });
     return data.deleteQuestion;
-  }
+  },
 };

@@ -5,6 +5,7 @@ import express from "express";
 import http from "http";
 import cors from "cors";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import "dotenv/config";
 
 import { initDatabase } from "./database/init";
@@ -35,10 +36,13 @@ async function startServer() {
   app.use(
     cors(corsOptions),
     bodyParser.json(),
+    cookieParser(), // Dodajemy middleware do obsługi ciasteczek
     expressMiddleware(server, {
       context: async ({ req, res }) => {
-        // Get the auth token from the headers
-        const token = req.headers.authorization?.split(" ")[1] || "";
+        // Get the auth token from cookies first, fallback to headers
+        const cookieToken = req.cookies?.auth_token;
+        const headerToken = req.headers.authorization?.split(" ")[1];
+        const token = cookieToken || headerToken || "";
 
         // Get authenticated user (or null if not authenticated)
         const authUser = await getAuthUser(token);
