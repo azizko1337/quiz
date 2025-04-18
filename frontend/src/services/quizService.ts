@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client/core";
 import { apolloClient } from "../apollo-client.ts";
-import type { User } from "./userService.ts";
+import { userService, type User } from "./userService.ts";
 
 export interface Quiz {
   id: string;
@@ -48,7 +48,16 @@ export const quizService = {
       `,
       variables: { authorId },
     });
-    return data.quizzes;
+    const quizzesWithAuthors = await Promise.all(
+      data.quizzes.map(async (quiz: Quiz) => {
+        return {
+          ...quiz,
+          author: await userService.getUser(quiz.authorId),
+        };
+      })
+    );
+
+    return quizzesWithAuthors;
   },
 
   createQuiz: async (authorId: string, title: string, description?: string) => {

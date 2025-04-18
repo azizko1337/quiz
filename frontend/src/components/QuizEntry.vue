@@ -3,10 +3,13 @@ import Button from "@/components/ui/button/Button.vue";
 import Badge from "@/components/ui/badge/Badge.vue";
 import { RouterLink } from "vue-router";
 import type { Quiz } from "@/services/quizService";
+import { useUserStore } from "@/stores/userStore";
 
 const { quiz } = defineProps<{
   quiz: Quiz;
 }>();
+
+const userStore = useUserStore();
 
 // Format date to a more readable format
 function formatDate(dateString: string): string {
@@ -19,7 +22,7 @@ function formatDate(dateString: string): string {
 }
 </script>
 <template>
-  <div class="flex justify-between w-full">
+  <div class="flex justify-between w-full max-w-[500px]">
     <div class="flex flex-col">
       <h2 class="text-lg font-bold">{{ quiz.title }}</h2>
       <p v-if="quiz.description" class="text-md text-gray-500">
@@ -35,6 +38,12 @@ function formatDate(dateString: string): string {
       </p>
     </div>
     <div class="flex flex-col justify-end">
+      <RouterLink
+        v-if="+quiz.authorId === Number(userStore?.user?.id)"
+        :to="`/quizzes/${quiz.id}/edit`"
+      >
+        <Button>Edit!</Button>
+      </RouterLink>
       <RouterLink :to="`/quizzes/${quiz.id}`">
         <Button>Start!</Button>
       </RouterLink>
