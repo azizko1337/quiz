@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import Button from "@/components/ui/button/Button.vue";
 import { Download } from "lucide-vue-next";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 </script>
 <template>
   <div
@@ -20,7 +23,7 @@ import { Download } from "lucide-vue-next";
       <div class="flex">
         <Button
           class="border-1 rounded text-xl font-bold p-5 cursor-pointer my-6"
-          @click=""
+          @click="router"
           >POBIERZ .APK <Download :size="18"
         /></Button>
       </div>

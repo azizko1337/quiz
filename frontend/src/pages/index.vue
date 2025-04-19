@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
-import { SquareUser } from "lucide-vue-next";
+import { SquareUser, LogIn } from "lucide-vue-next";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 </script>
 
 <template>
@@ -22,10 +25,15 @@ import { SquareUser } from "lucide-vue-next";
         <li>Aplikacja jest w pełni <b>darmowa</b></li>
       </ul>
 
-      <div class="flex">
+      <div class="flex max-md:flex-col gap-4 my-6">
         <Button
-          class="border-1 rounded text-xl font-bold p-5 cursor-pointer my-6"
-          to="/auth/register"
+          class="border-1 rounded text-xl font-bold p-5 cursor-pointer"
+          @click="router.push('/auth/login')"
+          >ZALOGUJ SIĘ<LogIn :size="18"
+        /></Button>
+        <Button
+          class="border-1 rounded text-xl font-bold p-5 cursor-pointer"
+          @click="router.push('/auth/register')"
           >ZAŁÓŻ KONTO <SquareUser :size="18"
         /></Button>
       </div>
