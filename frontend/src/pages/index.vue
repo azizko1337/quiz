@@ -14,7 +14,7 @@ const router = useRouter();
       class="backdrop-brightness-50 backdrop-blur-sm p-8 rounded-lg w-full"
     >
       <h1 class="text-3xl font-bold">Potrzebujesz utworzyć quiz?</h1>
-      <h2 class="pl-4 text-2xl">Nie ma sprawy</h2>
+      <h2 class="pl-4 mt-2 text-2xl">Nie ma sprawy</h2>
 
       <ul class="list-disc my-4 pl-5">
         <li><b>Prywatna</b> lub <b>publiczna</b> widoczność</li>

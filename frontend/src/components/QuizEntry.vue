@@ -4,6 +4,7 @@ import Badge from "@/components/ui/badge/Badge.vue";
 import { RouterLink } from "vue-router";
 import type { Quiz } from "@/services/quizService";
 import { useUserStore } from "@/stores/userStore";
+import { Play, Pencil } from "lucide-vue-next";
 
 const { quiz } = defineProps<{
   quiz: Quiz;
@@ -22,7 +23,9 @@ function formatDate(dateString: string): string {
 }
 </script>
 <template>
-  <div class="flex justify-between w-full max-w-[500px]">
+  <div
+    class="flex gap-8 justify-between w-full max-w-[500px] rounded-lg px-4 py-2 backdrop-blur-lg backdrop-brightness-50 shadow-2xl"
+  >
     <div class="flex flex-col">
       <h2 class="text-lg font-bold">{{ quiz.title }}</h2>
       <p v-if="quiz.description" class="text-md text-gray-500">
@@ -37,15 +40,17 @@ function formatDate(dateString: string): string {
         <Badge v-else variant="outline">Prywatny</Badge>
       </p>
     </div>
-    <div class="flex flex-col justify-end">
+    <div class="flex flex-col justify-end items-stretch gap-2">
       <RouterLink
         v-if="+quiz.authorId === Number(userStore?.user?.id)"
         :to="`/quizzes/${quiz.id}/edit`"
       >
-        <Button>Edit!</Button>
+        <Button class="border-b-1 w-full" variant="secondary"
+          >Edit <Pencil :size="14"
+        /></Button>
       </RouterLink>
       <RouterLink :to="`/quizzes/${quiz.id}`">
-        <Button>Start!</Button>
+        <Button class="border-b-1 w-full">Start <Play :size="14" /></Button>
       </RouterLink>
     </div>
   </div>
