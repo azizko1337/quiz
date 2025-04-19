@@ -4,9 +4,11 @@ import { Download } from "lucide-vue-next";
 </script>
 <template>
   <div
-    class="flex items-center w-full max-w-lg mx-auto justify-center max-md:flex-col-reverse max-md:gap-10 gap-4"
+    class="flex items-center w-full max-w-2xl mx-auto justify-center max-md:flex-col-reverse max-md:gap-10 gap-4"
   >
-    <section class="backdrop-brightness-50 backdrop-blur-sm p-8 rounded-lg">
+    <section
+      class="backdrop-brightness-50 backdrop-blur-sm p-8 rounded-lg w-full"
+    >
       <h1 class="text-3xl font-bold">
         Aplikacja posiada również wersję mobilną <br />dla systemu Android
       </h1>

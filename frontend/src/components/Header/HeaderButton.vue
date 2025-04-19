@@ -10,7 +10,7 @@ const props = defineProps({
 });
 
 const hover = ref(false);
-const lavaHeight = ref(0);
+const lavaHeight = ref(10);
 let intervalId: number | undefined;
 
 onMounted(() => {
@@ -26,7 +26,7 @@ onUnmounted(() => {
 });
 
 watch(hover, (newValue) => {
-  lavaHeight.value = 0;
+  lavaHeight.value = 10;
 });
 </script>
 <template>
@@ -38,7 +38,7 @@ watch(hover, (newValue) => {
     >{{ link.name }}
     <img
       v-if="hover"
-      class="absolute w-full left-0 top-[80%] z-10 max-h-lg"
+      class="absolute w-full left-0 top-[80%] z-10 max-h-[800px]"
       :style="{ height: `${lavaHeight}px` }"
       :src="LavaImage"
     />

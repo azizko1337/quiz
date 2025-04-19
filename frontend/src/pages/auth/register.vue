@@ -78,7 +78,7 @@ const onSubmit = form.handleSubmit(async (values) => {
 
 <template>
   <section
-    class="flex flex-col w-full max-w-lg mx-auto gap-10 items-center justify-center backdrop-brightness-50 backdrop-blur-sm p-8 rounded-lg"
+    class="flex flex-col w-full max-w-2xl mx-auto gap-10 items-center justify-center backdrop-brightness-50 backdrop-blur-sm p-8 rounded-lg"
   >
     <h1 class="text-2xl font-bold">Rejestracja</h1>
     <form class="flex flex-col gap-4" @submit="onSubmit">

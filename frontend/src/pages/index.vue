@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { Button } from "@/components/ui/button";
+import { SquareUser } from "lucide-vue-next";
 </script>
 
 <template>
   <div
-    class="flex items-center w-full max-w-lg mx-auto justify-center max-md:flex-col-reverse max-md:gap-10"
+    class="flex items-center w-full max-w-2xl mx-auto justify-center max-md:flex-col-reverse max-md:gap-10"
   >
-    <section class="backdrop-brightness-50 backdrop-blur-sm p-8 rounded-lg">
+    <section
+      class="backdrop-brightness-50 backdrop-blur-sm p-8 rounded-lg w-full"
+    >
       <h1 class="text-3xl font-bold">Potrzebujesz utworzyć quiz?</h1>
       <h2 class="pl-4 text-2xl">Nie ma sprawy</h2>
 
@@ -23,8 +26,8 @@ import { Button } from "@/components/ui/button";
         <Button
           class="border-1 rounded text-xl font-bold p-5 cursor-pointer my-6"
           to="/auth/register"
-          >ZAŁÓŻ KONTO</Button
-        >
+          >ZAŁÓŻ KONTO <SquareUser :size="18"
+        /></Button>
       </div>
     </section>
   </div>
