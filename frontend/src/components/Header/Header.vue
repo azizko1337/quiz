@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { RouterLink } from "vue-router";
-import Logo from "@/assets/images/logo.jpg";
+import Logo from "@/assets/images/logo.png";
 import { useUserStore } from "@/stores/userStore";
+import HeaderButton from "@/components/Header/HeaderButton.vue";
 
 const userStore = useUserStore();
 
@@ -17,13 +18,12 @@ async function handleLogout() {
 <template>
   <header class="w-full flex justify-between items-center py-2 pr-10">
     <div class="flex items-center gap-1">
-      <img class="w-[200px]" :src="Logo" alt="Logo" />
-      <h1 class="text-2xl font-bold">QUIZ-UŚ</h1>
+      <img class="w-[80px] cursor-pointer" :src="Logo" alt="Logo" />
     </div>
     <nav>
       <ul class="flex gap-2 items-center">
         <li v-for="link in links">
-          <RouterLink class="p-2" :to="link.path">{{ link.name }}</RouterLink>
+          <HeaderButton :link="link" />
         </li>
         <!-- Auth Links -->
         <template v-if="userStore.user">

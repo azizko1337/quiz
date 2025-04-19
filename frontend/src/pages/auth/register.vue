@@ -77,7 +77,9 @@ const onSubmit = form.handleSubmit(async (values) => {
 </script>
 
 <template>
-  <section class="flex flex-col gap-10 items-center justify-center">
+  <section
+    class="flex flex-col w-full max-w-lg mx-auto gap-10 items-center justify-center backdrop-brightness-50 backdrop-blur-sm p-8 rounded-lg"
+  >
     <h1 class="text-2xl font-bold">Rejestracja</h1>
     <form class="flex flex-col gap-4" @submit="onSubmit">
       <div v-if="registerError" class="text-destructive mb-4">
@@ -124,7 +126,7 @@ const onSubmit = form.handleSubmit(async (values) => {
         </FormItem>
       </FormField>
       <Button
-        class="cursor-pointer shadow-2xl my-4"
+        class="cursor-pointer shadow-2xl my-4 border-1"
         type="submit"
         :disabled="userStore.isLoading"
       >

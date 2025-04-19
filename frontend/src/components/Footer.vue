@@ -1,7 +1,4 @@
-<script setup lang="ts">
-import { RouterLink } from "vue-router";
-import Flame from "@/assets/images/flame.gif";
-</script>
+<script setup lang="ts"></script>
 <template>
   <footer class="w-full flex flex-col gap-4">
     <div class="p-5 flex justify-center">
@@ -15,11 +12,6 @@ import Flame from "@/assets/images/flame.gif";
           >Antoniego Załupkę</a
         ></i
       >
-    </div>
-    <div class="flex justify-between">
-      <img class="w-1/4" :src="Flame" alt="flame" />
-      <img class="w-1/4" :src="Flame" alt="flame" />
-      <img class="w-1/4" :src="Flame" alt="flame" />
     </div>
   </footer>
 </template>
