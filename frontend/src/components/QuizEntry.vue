@@ -36,7 +36,7 @@ function formatDate(dateString: string): string {
         Created by <Badge>{{ quiz.author?.username || "Unknown" }}</Badge
         >,
         <Badge>{{ formatDate(quiz.createdAt) }}</Badge>
-        <Badge v-if="quiz.public" variant="secondary">Publiczny</Badge>
+        <Badge v-if="quiz.isPublic" variant="outline">Publiczny</Badge>
         <Badge v-else variant="outline">Niepubliczny</Badge>
       </p>
     </div>

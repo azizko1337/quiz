@@ -11,14 +11,14 @@ export const quizQueries = {
 
     const db = await dbPromise;
     const quiz = await db.get(
-      "SELECT id, author_id as authorId, title, description, public, created_at as createdAt FROM quizzes WHERE id = ?",
+      "SELECT id, author_id as authorId, title, description, isPublic, created_at as createdAt FROM quizzes WHERE id = ?",
       [id]
     );
 
     if (!quiz) return null;
 
     // Allow access if quiz is public or if user is the owner
-    if (quiz.public || user.id === quiz.authorId || user.role === "ADMIN") {
+    if (quiz.isPublic || user.id === quiz.authorId || user.role === "ADMIN") {
       return quiz;
     } else {
       throw new AuthorizationError(
@@ -34,13 +34,13 @@ export const quizQueries = {
       // If user is viewing their own quizzes - return all
       if (authUser && (authUser.id === authorId || authUser.role === "ADMIN")) {
         return db.all(
-          "SELECT id, author_id as authorId, title, description, public, created_at as createdAt FROM quizzes WHERE author_id = ?",
+          "SELECT id, author_id as authorId, title, description, isPublic, created_at as createdAt FROM quizzes WHERE author_id = ?",
           [authorId]
         );
       } else {
         // User is viewing someone else's quizzes - return only public ones
         return db.all(
-          "SELECT id, author_id as authorId, title, description, public, created_at as createdAt FROM quizzes WHERE author_id = ? AND public = 1",
+          "SELECT id, author_id as authorId, title, description, isPublic, created_at as createdAt FROM quizzes WHERE author_id = ? AND isPublic = 1",
           [authorId]
         );
       }
@@ -50,19 +50,19 @@ export const quizQueries = {
     if (authUser) {
       if (authUser.role === "ADMIN") {
         return db.all(
-          "SELECT id, author_id as authorId, title, description, public, created_at as createdAt FROM quizzes"
+          "SELECT id, author_id as authorId, title, description, isPublic, created_at as createdAt FROM quizzes"
         );
       } else {
         // Authenticated users see all public quizzes and their own private quizzes
         return db.all(
-          "SELECT id, author_id as authorId, title, description, public, created_at as createdAt FROM quizzes WHERE public = 1 OR author_id = ?",
+          "SELECT id, author_id as authorId, title, description, isPublic, created_at as createdAt FROM quizzes WHERE isPublic = 1 OR author_id = ?",
           [authUser.id]
         );
       }
     } else {
       // Non-authenticated users only see public quizzes
       return db.all(
-        "SELECT id, author_id as authorId, title, description, public, created_at as createdAt FROM quizzes WHERE public = 1"
+        "SELECT id, author_id as authorId, title, description, isPublic, created_at as createdAt FROM quizzes WHERE isPublic = 1"
       );
     }
   },
@@ -71,7 +71,7 @@ export const quizQueries = {
 export const quizMutations = {
   createQuiz: async (
     _: any,
-    { authorId, title, description }: any,
+    { authorId, title, isPublic, description }: any,
     { authUser }: any
   ) => {
     // Ensure user is authenticated
@@ -84,15 +84,15 @@ export const quizMutations = {
 
     const db = await dbPromise;
     const result = await db.run(
-      "INSERT INTO quizzes (author_id, title, description, public) VALUES (?, ?, ?, ?)",
-      [authorId, title, description, false]
+      "INSERT INTO quizzes (author_id, title, description, isPublic) VALUES (?, ?, ?, ?)",
+      [authorId, title, description, isPublic]
     );
     return {
       id: result.lastID,
       authorId,
       title,
       description,
-      public: false,
+      isPublic,
       createdAt: new Date().toISOString(),
     };
   },
@@ -132,7 +132,7 @@ export const quizMutations = {
     }
 
     return db.get(
-      "SELECT id, author_id as authorId, title, description, public, created_at as createdAt FROM quizzes WHERE id = ?",
+      "SELECT id, author_id as authorId, title, description, isPublic, created_at as createdAt FROM quizzes WHERE id = ?",
       [id]
     );
   },

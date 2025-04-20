@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, onMounted, ref, watch } from "vue";
+import { onBeforeMount, computed, onMounted, ref, watch } from "vue";
 import QuizEntry from "@/components/QuizEntry.vue";
 import { quizService, type Quiz } from "@/services/quizService";
 import { useUserStore } from "@/stores/userStore";
@@ -63,12 +63,16 @@ onMounted(async () => {
 watch(searchQuery, (newQuery) => {
   fetchQuizzes(newQuery || undefined);
 });
+
+const isProfileMine = computed(() => {
+  return user.value?.id == userStore.user?.id;
+});
 </script>
 
 <template>
   <div class="w-full flex flex-col min-h-[80vh]">
     <div
-      v-if="user?.id == userStore.user?.id"
+      v-if="isProfileMine"
       class="flex max-md:flex-col max-md:items-start gap-4 justify-between items-center mb-6"
     >
       <h1 class="text-5xl font-bold">Twoje quizy</h1>
@@ -108,18 +112,32 @@ watch(searchQuery, (newQuery) => {
       v-else-if="quizzes.length > 0"
       class="w-full flex flex-col gap-6 items-center grow-1"
     >
-      <li v-for="quiz in quizzes" :key="quiz.id">
+      <li
+        v-for="quiz in quizzes"
+        :key="quiz.id"
+        class="w-full flex justify-center"
+      >
         <QuizEntry :quiz="quiz" />
       </li>
     </ul>
 
     <div v-else class="text-center py-10 grow-1">
-      <p v-if="!searchQuery" class="text-muted-foreground">
-        Użytkownik nie ma żadnych quizów.
-      </p>
-      <p v-else class="text-muted-foreground">
+      <p v-if="searchQuery" class="text-muted-foreground">
         Nie znaleziono quizów pasujących do wyszukiwania.
       </p>
+      <p v-else-if="!isProfileMine" class="text-muted-foreground">
+        Użytkownik nie ma żadnych quizów.
+      </p>
+      <div v-else class="flex flex-col items-center">
+        <p class="text-muted-foreground">Nie masz jeszcze żadnych quizów.</p>
+        <RouterLink
+          v-if="!searchQuery"
+          to="/quizzes/create"
+          class="mt-4 inline-block"
+        >
+          <Button class="border-1">Utwórz pierwszy quiz</Button>
+        </RouterLink>
+      </div>
     </div>
   </div>
 </template>

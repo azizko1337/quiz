@@ -9,7 +9,7 @@ export interface Quiz {
   description?: string;
   createdAt: string;
   author: User;
-  public: boolean;
+  isPublic: boolean;
 }
 
 export const quizService = {
@@ -23,7 +23,7 @@ export const quizService = {
             title
             description
             createdAt
-            public
+            isPublic
           }
         }
       `,
@@ -42,7 +42,7 @@ export const quizService = {
             title
             description
             createdAt
-            public
+            isPublic
           }
         }
       `,
@@ -60,29 +60,36 @@ export const quizService = {
     return quizzesWithAuthors;
   },
 
-  createQuiz: async (authorId: string, title: string, description?: string) => {
+  createQuiz: async (
+    authorId: string,
+    title: string,
+    isPublic: boolean,
+    description?: string
+  ) => {
     const { data } = await apolloClient.mutate({
       mutation: gql`
         mutation CreateQuiz(
           $authorId: ID!
           $title: String!
           $description: String
+          $isPublic: Boolean
         ) {
           createQuiz(
             authorId: $authorId
             title: $title
             description: $description
+            isPublic: $isPublic
           ) {
             id
             authorId
             title
             description
             createdAt
-            public
+            isPublic
           }
         }
       `,
-      variables: { authorId, title, description },
+      variables: { authorId, title, description, isPublic },
     });
     return data.createQuiz;
   },
@@ -97,7 +104,7 @@ export const quizService = {
             title
             description
             createdAt
-            public
+            isPublic
           }
         }
       `,

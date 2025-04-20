@@ -15,7 +15,7 @@ let intervalId: number | undefined;
 
 onMounted(() => {
   intervalId = setInterval(() => {
-    lavaHeight.value += 20;
+    lavaHeight.value += 50;
   }, 1000);
 });
 

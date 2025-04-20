@@ -80,25 +80,20 @@ watch(searchQuery, (newQuery) => {
       v-else-if="quizzes.length > 0"
       class="w-full flex flex-col gap-6 items-center grow-1"
     >
-      <li v-for="quiz in quizzes" :key="quiz.id">
+      <li
+        v-for="quiz in quizzes"
+        :key="quiz.id"
+        class="w-full flex justify-center"
+      >
         <QuizEntry :quiz="quiz" />
       </li>
     </ul>
 
     <div v-else class="text-center py-10 grow-1">
-      <p v-if="!searchQuery" class="text-muted-foreground">
-        Nie masz jeszcze żadnych quizów.
-      </p>
+      <p v-if="!searchQuery" class="text-muted-foreground">Brak quizów.</p>
       <p v-else class="text-muted-foreground">
         Nie znaleziono quizów pasujących do wyszukiwania.
       </p>
-      <RouterLink
-        v-if="!searchQuery"
-        to="/quizzes/create"
-        class="mt-4 inline-block"
-      >
-        <Button>Utwórz pierwszy quiz</Button>
-      </RouterLink>
     </div>
   </div>
 </template>

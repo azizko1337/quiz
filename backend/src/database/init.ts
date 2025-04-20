@@ -21,7 +21,7 @@ export async function initDatabase() {
       author_id INTEGER NOT NULL,
       title TEXT NOT NULL,
       description TEXT,
-      public BOOLEAN DEFAULT FALSE,
+      isPublic BOOLEAN DEFAULT FALSE,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (author_id) REFERENCES users (id) ON DELETE SET NULL
     )

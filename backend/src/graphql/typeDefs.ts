@@ -18,7 +18,7 @@ export const typeDefs = `#graphql
     title: String!
     description: String
     createdAt: String!
-    public: Boolean!
+    isPublic: Boolean!
   }
 
   type Question {
@@ -81,7 +81,7 @@ export const typeDefs = `#graphql
     ): User!
     deleteUser(id: ID!): Boolean!
 
-    createQuiz(authorId: ID!, title: String!, description: String): Quiz!
+    createQuiz(authorId: ID!, title: String!, isPublic: Boolean, description: String): Quiz!
     updateQuiz(id: ID!, title: String, description: String): Quiz!
     deleteQuiz(id: ID!): Boolean!
 

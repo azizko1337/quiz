@@ -6,6 +6,7 @@ import * as z from "zod";
 import { ref } from "vue";
 
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox"; // Import Checkbox
 import {
   FormControl,
   FormDescription,
@@ -38,11 +39,15 @@ const formSchema = toTypedSchema(
       .string()
       .max(500, "Opis nie może być dłuższy niż 500 znaków")
       .optional(),
+    isPublic: z.boolean().default(true), // Add isPublic field, default to true
   })
 );
 
 const form = useForm({
   validationSchema: formSchema,
+  initialValues: {
+    isPublic: true,
+  },
 });
 
 const onSubmit = form.handleSubmit(async (values) => {
@@ -59,11 +64,12 @@ const onSubmit = form.handleSubmit(async (values) => {
     const quiz = await quizService.createQuiz(
       userStore.user.id,
       values.title,
+      values.isPublic,
       values.description
     );
 
-    // Redirect to quiz edit page or quiz list
-    router.push(`/quizzes`);
+    // Redirect to the newly created quiz edit page
+    router.push(`/quizzes/${quiz.id}/edit`); // Redirect to edit page instead of list
   } catch (error) {
     createError.value =
       error instanceof Error ? error.message : "Błąd podczas tworzenia quizu";
@@ -75,7 +81,9 @@ const onSubmit = form.handleSubmit(async (values) => {
 </script>
 
 <template>
-  <section class="flex flex-col gap-10 items-center justify-center">
+  <section
+    class="flex flex-col gap-10 items-center justify-center backdrop-blur-xl p-5 w-full max-w-[600px] mx-auto rounded-lg backdrop-brightness-50"
+  >
     <h1 class="text-2xl font-bold">Utwórz nowy quiz</h1>
     <form class="flex flex-col gap-4 w-full max-w-md" @submit="onSubmit">
       <div v-if="createError" class="text-destructive mb-4">
@@ -114,13 +122,34 @@ const onSubmit = form.handleSubmit(async (values) => {
         </FormItem>
       </FormField>
 
-      <Button
-        class="cursor-pointer shadow-2xl my-4"
-        type="submit"
-        :disabled="isSubmitting"
-      >
-        {{ isSubmitting ? "Tworzenie..." : "Utwórz quiz" }}
-      </Button>
+      <!-- Checkbox for Public/Private with boolean values -->
+      <FormField v-slot="{ value, handleChange }" name="isPublic">
+        <FormItem
+          class="flex flex-row items-start gap-x-3 space-y-0 rounded-md border p-4"
+        >
+          <FormControl>
+            <Checkbox
+              :model-value="value"
+              @update:model-value="handleChange"
+              type="checkbox"
+            />
+          </FormControl>
+          <div class="space-y-1 leading-none">
+            <FormLabel>Publiczny</FormLabel>
+            <FormDescription>
+              Zaznacz, jeśli quiz ma być widoczny dla wszystkich. Odznacz, aby
+              był prywatny.
+            </FormDescription>
+          </div>
+        </FormItem>
+        <FormMessage />
+      </FormField>
+
+      <div class="flex items-center my-4">
+        <Button class="border-1 mx-auto" type="submit" :disabled="isSubmitting">
+          {{ isSubmitting ? "Tworzenie..." : "Utwórz quiz i dodaj pytania" }}
+        </Button>
+      </div>
     </form>
   </section>
 </template>
