@@ -43,7 +43,12 @@ const isHeaderOpen = ref(false);
         <!-- Auth Links -->
         <template v-if="userStore.user">
           <li>
-            <HeaderButton :link="{ name: 'Moje quizy', path: '/quizzes' }" />
+            <HeaderButton
+              :link="{
+                name: 'Moje quizy',
+                path: `/profiles/${userStore.user.id}`,
+              }"
+            />
           </li>
           <li>
             <HeaderButton
@@ -52,7 +57,7 @@ const isHeaderOpen = ref(false);
           </li>
           <li class="ml-4 italic">
             <HeaderButton
-              :link="{ name: userStore.user.username, path: '/users' }"
+              :link="{ name: userStore.user.username, path: '/auth/profile' }"
             />
           </li>
         </template>
@@ -98,7 +103,10 @@ const isHeaderOpen = ref(false);
           <template v-if="userStore.user">
             <li>
               <HeaderButton
-                :link="{ name: 'Moje quizy', path: '/quizzes' }"
+                :link="{
+                  name: 'Moje quizy',
+                  path: `/profiles/${userStore.user.id}`,
+                }"
                 @click="isHeaderOpen = false"
               />
             </li>
@@ -110,7 +118,7 @@ const isHeaderOpen = ref(false);
             </li>
             <li class="mt-4 italic">
               <HeaderButton
-                :link="{ name: userStore.user.username, path: '/users' }"
+                :link="{ name: userStore.user.username, path: '/auth/profile' }"
                 @click="isHeaderOpen = false"
               />
             </li>

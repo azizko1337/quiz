@@ -2,8 +2,17 @@
 import { Button } from "@/components/ui/button";
 import { SquareUser, LogIn } from "lucide-vue-next";
 import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/userStore";
+import { onBeforeMount } from "vue";
 
 const router = useRouter();
+
+onBeforeMount(() => {
+  const userStore = useUserStore();
+  if (userStore.user) {
+    router.push("/quizzes");
+  }
+});
 </script>
 
 <template>

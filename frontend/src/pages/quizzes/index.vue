@@ -56,9 +56,6 @@ watch(searchQuery, (newQuery) => {
       class="flex max-md:flex-col max-md:items-start gap-4 justify-between items-center mb-6"
     >
       <h1 class="text-5xl font-bold">Publiczne quizy</h1>
-      <RouterLink to="/quizzes/create">
-        <Button class="border-1">Utwórz nowy quiz <Plus :size="16" /></Button>
-      </RouterLink>
     </div>
 
     <!-- Search Input -->

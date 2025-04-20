@@ -37,7 +37,7 @@ function formatDate(dateString: string): string {
         >,
         <Badge>{{ formatDate(quiz.createdAt) }}</Badge>
         <Badge v-if="quiz.public" variant="secondary">Publiczny</Badge>
-        <Badge v-else variant="outline">Prywatny</Badge>
+        <Badge v-else variant="outline">Niepubliczny</Badge>
       </p>
     </div>
     <div class="flex flex-col justify-end items-stretch gap-2">

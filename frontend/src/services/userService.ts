@@ -105,4 +105,52 @@ export const userService = {
     });
     return data.createUser;
   },
+
+  updateUser: async (
+    id: string,
+    username?: string,
+    email?: string,
+    password?: string,
+    role?: "ADMIN" | "USER"
+  ) => {
+    const { data } = await apolloClient.mutate({
+      mutation: gql`
+        mutation UpdateUser(
+          $id: ID!
+          $username: String
+          $email: String
+          $password: String
+          $role: Role
+        ) {
+          updateUser(
+            id: $id
+            username: $username
+            email: $email
+            password: $password
+            role: $role
+          ) {
+            id
+            username
+            email
+            role
+            createdAt
+          }
+        }
+      `,
+      variables: { id, username, email, password, role },
+    });
+    return data.updateUser;
+  },
+
+  deleteUser: async (id: string) => {
+    const { data } = await apolloClient.mutate({
+      mutation: gql`
+        mutation DeleteUser($id: ID!) {
+          deleteUser(id: $id)
+        }
+      `,
+      variables: { id },
+    });
+    return data.deleteUser;
+  },
 };
