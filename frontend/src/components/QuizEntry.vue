@@ -21,6 +21,8 @@ function formatDate(dateString: string): string {
     year: "numeric",
   });
 }
+
+console.log(userStore, quiz);
 </script>
 <template>
   <div
@@ -42,7 +44,7 @@ function formatDate(dateString: string): string {
     </div>
     <div class="flex flex-col justify-end items-stretch gap-2">
       <RouterLink
-        v-if="+quiz.authorId === Number(userStore?.user?.id)"
+        v-if="quiz.authorId === userStore?.user?.id"
         :to="`/quizzes/${quiz.id}/edit`"
       >
         <Button class="border-b-1 w-full" variant="secondary"

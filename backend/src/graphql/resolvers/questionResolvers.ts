@@ -5,6 +5,7 @@ import {
   ensureQuizOwner,
   AuthorizationError,
 } from "../../utils/auth";
+import { v4 as uuidv4 } from "uuid";
 
 export const questionQueries = {
   question: async (_: any, { id }: any, { authUser }: any) => {
@@ -93,8 +94,8 @@ export const questionMutations = {
 
     const db = await dbPromise;
     const result = await db.run(
-      "INSERT INTO questions (quiz_id, question, image) VALUES (?, ?, ?)",
-      [quizId, question, image]
+      "INSERT INTO questions (id, quiz_id, question, image) VALUES (?, ?, ?, ?)",
+      [uuidv4(), quizId, question, image]
     );
 
     return {

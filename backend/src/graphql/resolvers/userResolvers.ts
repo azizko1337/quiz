@@ -4,6 +4,7 @@ import {
   checkAdmin,
   AuthorizationError,
 } from "../../utils/auth";
+import { v4 as uuidv4 } from "uuid";
 
 export const userQueries = {
   users: async (_: any, __: any, { authUser }: any) => {
@@ -67,8 +68,8 @@ export const userMutations = {
 
     const db = await dbPromise;
     const result = await db.run(
-      "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)",
-      [username, email, password, userRole]
+      "INSERT INTO users (id, username, email, password, role) VALUES (?, ?, ?, ?, ?)",
+      [uuidv4(), username, email, password, userRole]
     );
 
     return {

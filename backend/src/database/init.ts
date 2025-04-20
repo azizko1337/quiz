@@ -7,7 +7,7 @@ export async function initDatabase() {
 
   await db.exec(`
     CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id TEXT PRIMARY KEY,
       username TEXT NOT NULL UNIQUE,
       email TEXT NOT NULL UNIQUE,
       password TEXT NOT NULL,
@@ -17,7 +17,7 @@ export async function initDatabase() {
   `);
   await db.exec(`
     CREATE TABLE IF NOT EXISTS quizzes (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id TEXT PRIMARY KEY,
       author_id INTEGER NOT NULL,
       title TEXT NOT NULL,
       description TEXT,
@@ -28,7 +28,7 @@ export async function initDatabase() {
   `);
   await db.exec(`
     CREATE TABLE IF NOT EXISTS questions (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id TEXT PRIMARY KEY,
       quiz_id INTEGER NOT NULL,
       question TEXT NOT NULL,
       image TEXT,
@@ -38,7 +38,7 @@ export async function initDatabase() {
   `);
   await db.exec(`
     CREATE TABLE IF NOT EXISTS answers (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id TEXT PRIMARY KEY,
       question_id INTEGER NOT NULL,
       answer TEXT NOT NULL,
       is_correct BOOLEAN DEFAULT FALSE,
@@ -49,7 +49,7 @@ export async function initDatabase() {
   `);
   await db.exec(`
     CREATE TABLE IF NOT EXISTS quiz_attempts (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id TEXT PRIMARY KEY,
       quiz_id INTEGER NOT NULL,
       user_id INTEGER NOT NULL,
       score INTEGER,
@@ -60,7 +60,7 @@ export async function initDatabase() {
   `);
   await db.exec(`
     CREATE TABLE IF NOT EXISTS question_attempts (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id TEXT PRIMARY KEY,
       question_id INTEGER NOT NULL,
       quiz_attempt_id INTEGER NOT NULL,
       answer_id INTEGER,

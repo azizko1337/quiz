@@ -4,6 +4,7 @@ import {
   checkAdmin,
   AuthorizationError,
 } from "../../utils/auth";
+import { v4 as uuidv4 } from "uuid";
 
 export const quizAttemptQueries = {
   quizAttempt: async (_: any, { id }: any, { authUser }: any) => {
@@ -84,8 +85,8 @@ export const quizAttemptMutations = {
     } else {
       // Create new attempt
       const result = await db.run(
-        "INSERT INTO quiz_attempts (quiz_id, user_id, score) VALUES (?, ?, ?)",
-        [quizId, userId, score]
+        "INSERT INTO quiz_attempts (id, quiz_id, user_id, score) VALUES (?, ?, ?, ?)",
+        [uuidv4(), quizId, userId, score]
       );
 
       return {
