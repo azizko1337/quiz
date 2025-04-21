@@ -48,7 +48,7 @@ console.log(userStore, quiz);
         :to="`/quizzes/${quiz.id}/edit`"
       >
         <Button class="border-b-1 w-full" variant="secondary"
-          >Edit <Pencil :size="14"
+          >Edytuj <Pencil :size="14"
         /></Button>
       </RouterLink>
       <RouterLink :to="`/quizzes/${quiz.id}`">
