@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 <template>
   <footer class="w-full flex flex-col gap-4">
-    <div class="p-5 flex justify-center">
+    <div class="p-5 flex justify-center text-center">
       <i
         >Aplikacja wykonana na projekt zaliczeniowy modułu
         <b>Projektowanie Webowych Aplikacji Graficznych</b> przez
