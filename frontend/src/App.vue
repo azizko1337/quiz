@@ -5,6 +5,7 @@ import Footer from "@/components/Footer.vue";
 import Tribal from "@/assets/images/tribal.webp";
 import { useUserStore } from "@/stores/userStore";
 import { onMounted } from "vue";
+import { Toaster } from "@/components/ui/sonner";
 
 const userStore = useUserStore();
 
@@ -14,6 +15,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <Toaster />
   <div
     class="bg-[#121212] bg-cover bg-no-repeat bg-center min-h-screen backdrop-blur-sm text-amber-50"
   >

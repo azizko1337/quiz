@@ -55,7 +55,7 @@ const onSubmit = form.handleSubmit(async (values) => {
 
 <template>
   <section
-    class="flex flex-col w-full max-w-2xl mx-auto items-center backdrop-brightness-50 backdrop-blur-sm p-8 rounded-lg"
+    class="flex flex-col w-full max-w-2xl mx-auto items-center p-8 rounded-lg"
   >
     <h1 class="text-2xl font-bold mb-8">Logowanie</h1>
     <form class="flex flex-col gap-4" @submit="onSubmit">

@@ -19,9 +19,7 @@ onBeforeMount(() => {
   <div
     class="flex items-center w-full max-w-2xl mx-auto justify-center max-md:flex-col-reverse max-md:gap-10"
   >
-    <section
-      class="backdrop-brightness-50 backdrop-blur-sm p-8 rounded-lg w-full"
-    >
+    <section class="p-8 w-full">
       <h1 class="text-3xl font-bold">Potrzebujesz utworzyć quiz?</h1>
       <h2 class="pl-4 mt-2 text-2xl">Nie ma sprawy</h2>
 

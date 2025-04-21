@@ -7,6 +7,9 @@ import { answerService, type Answer } from "@/services/answerService";
 import { useUserStore } from "@/stores/userStore";
 import JsonEditorVue from "json-editor-vue";
 import type { JSONEditorMode } from "json-editor-vue";
+import { toast } from "vue-sonner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 
 const route = useRoute();
 const router = useRouter();
@@ -74,10 +77,12 @@ async function fetchQuizData() {
       2 // space for pretty printing
     );
   } catch (err) {
-    error.value =
+    const errorMessage =
       err instanceof Error
         ? err.message
         : "Wystąpił błąd podczas ładowania danych do edycji quizu.";
+    error.value = errorMessage;
+    toast.error(`Błąd ładowania: ${errorMessage}`); // Add toast on fetch error
     console.error(err);
     // Clear potentially partially loaded data
     jsonEditorModel.value = "[]";
@@ -138,9 +143,12 @@ function addNewQuestion() {
 
     // Update the model with the pretty-printed JSON
     jsonEditorModel.value = JSON.stringify(currentData, null, 2);
+    toast.info("Dodano szablon nowego pytania do edytora."); // Add toast on success
   } catch (e) {
-    error.value =
+    const errorMessage =
       "Nie można dodać pytania: Nieprawidłowy format JSON w edytorze.";
+    error.value = errorMessage;
+    toast.error(errorMessage); // Add toast on error
     console.error("Error parsing JSON before adding new question:", e);
     // Optionally reset or handle the error state more gracefully
   }
@@ -154,7 +162,9 @@ async function pushQuestions() {
       throw new Error("JSON data must be an array of questions.");
     }
   } catch (e) {
-    error.value = "Nieprawidłowy format JSON.";
+    const errorMessage = "Nieprawidłowy format JSON.";
+    error.value = errorMessage;
+    toast.error(errorMessage); // Add toast on JSON parse error
     console.error(e);
     return;
   }
@@ -195,6 +205,7 @@ async function pushQuestions() {
     // --- Process Updated/New Questions and Answers ---
     for (const updatedQuestion of updatedQuestionsData) {
       let questionId: string;
+      let isNewQuestion = false; // Flag to track if it's a new question
 
       // Upsert Question
       if (updatedQuestion.id) {
@@ -206,17 +217,18 @@ async function pushQuestions() {
         );
         questionId = result.id;
         processedQuestionIds.add(questionId); // Mark as processed
+        toast.success(`Zaktualizowano pytanie: ${updatedQuestion.question}`);
       } else {
         // Create new question
+        isNewQuestion = true;
         const result = await questionService.createQuestion(
           quizId,
           updatedQuestion.question,
           updatedQuestion.image
         );
         questionId = result.id;
-        // New questions don't have original answers, so no need to add to originalAnswerIdsByQuestionId
-        // Add to processedQuestionIds implicitly by processing it
         processedQuestionIds.add(questionId); // Also mark new ones as processed relative to the *updated* list
+        toast.success(`Utworzono nowe pytanie: ${updatedQuestion.question}`);
       }
 
       const originalAnswerIds =
@@ -238,6 +250,7 @@ async function pushQuestions() {
             );
             answerId = result.id;
             processedAnswerIds.add(answerId); // Mark as processed
+            toast.success(`Zaktualizowano odpowiedź: ${updatedAnswer.answer}`);
           } else {
             // Create new answer
             const result = await answerService.createAnswer(
@@ -248,23 +261,30 @@ async function pushQuestions() {
             );
             answerId = result.id;
             processedAnswerIds.add(answerId); // Mark new ones as processed
+            toast.success(`Utworzono nową odpowiedź: ${updatedAnswer.answer}`);
           }
         }
       }
 
-      // Schedule deletion of removed answers for this question
-      originalAnswerIds.forEach((originalAnswerId) => {
-        if (!processedAnswerIds.has(originalAnswerId)) {
-          console.log(`Scheduling deletion of answer: ${originalAnswerId}`);
-          deletePromises.push(answerService.deleteAnswer(originalAnswerId));
-        }
-      });
+      // Schedule deletion of removed answers for this question (only if the question itself wasn't new)
+      if (!isNewQuestion) {
+        originalAnswerIds.forEach((originalAnswerId) => {
+          if (!processedAnswerIds.has(originalAnswerId)) {
+            toast.info(
+              `Planowanie usunięcia odpowiedzi ID: ${originalAnswerId}`
+            );
+            deletePromises.push(answerService.deleteAnswer(originalAnswerId));
+          }
+        });
+      }
     }
 
     // --- Schedule Deletion of Removed Questions ---
     originalQuestionIds.forEach((originalQuestionId) => {
       if (!processedQuestionIds.has(originalQuestionId)) {
-        console.log(`Scheduling deletion of question: ${originalQuestionId}`);
+        toast.info(
+          `Planowanie usunięcia pytania ID: ${originalQuestionId} (i jego odpowiedzi)`
+        );
         // Deleting a question should ideally cascade delete its answers in the backend,
         // but we explicitly delete answers above anyway.
         deletePromises.push(questionService.deleteQuestion(originalQuestionId));
@@ -272,15 +292,23 @@ async function pushQuestions() {
     });
 
     // --- Execute all deletions ---
-    await Promise.all(deletePromises);
+    if (deletePromises.length > 0) {
+      await Promise.all(deletePromises);
+      toast.success(`Pomyślnie usunięto ${deletePromises.length} elementów.`);
+    }
 
     // --- Refresh data ---
     await fetchQuizData(); // Reload data to reflect changes
+    editorKey.value++; // Increment key to force re-render of the editor
+    jsonEditorMode.value = "text"; // Switch back to text mode after save if needed
+    toast.success("Wszystkie zmiany zostały pomyślnie zapisane!"); // Overall success toast
   } catch (err) {
-    error.value =
+    const errorMessage =
       err instanceof Error
         ? err.message
         : "Wystąpił błąd podczas zapisywania zmian.";
+    error.value = errorMessage;
+    toast.error(`Błąd zapisu: ${errorMessage}`); // Add toast on save error
     console.error(err);
     // Optionally re-fetch data even on error to revert editor? Or leave as is?
     // Leaving as is for now, user can see the error.
@@ -298,14 +326,19 @@ async function pushQuestions() {
     >
       Błąd: {{ error }}
     </div>
-    <div v-else-if="quiz">
-      <h1>Edycja Quizu: {{ quiz.title }}</h1>
-      <p class="text-muted-foreground text-sm mb-4">
-        Edytuj pytania i odpowiedzi poniżej w formacie JSON. Pamiętaj o
-        zachowaniu poprawnej struktury. Możesz dodawać nowe pytania (pomijając
-        pole "id") i odpowiedzi (pomijając pole "id"). Usunięcie pytania lub
-        odpowiedzi z JSON spowoduje ich usunięcie z bazy danych po zapisaniu.
-      </p>
+    <div v-else-if="quiz" class="flex flex-col gap-4">
+      <h1 class="text-3xl">
+        Edycja quizu <b>{{ quiz.title }}</b>
+      </h1>
+      <Alert class="max-w-xl">
+        <AlertTitle>Podpowiedź</AlertTitle>
+        <AlertDescription>
+          Edytuj pytania i odpowiedzi poniżej w formacie JSON. Pamiętaj o
+          zachowaniu poprawnej struktury. Możesz dodawać nowe pytania (pomijając
+          pole "id") i odpowiedzi (pomijając pole "id"). Usunięcie pytania lub
+          odpowiedzi z JSON spowoduje ich usunięcie z bazy danych po zapisaniu.
+        </AlertDescription>
+      </Alert>
       <JsonEditorVue
         :key="editorKey"
         v-model="jsonEditorModel"
@@ -318,21 +351,13 @@ async function pushQuestions() {
         }"
         class="text-left h-[60vh] border rounded"
       />
-      <div class="mt-4 flex gap-2">
-        <button
-          @click="addNewQuestion"
-          :disabled="isLoading"
-          class="px-4 py-2 bg-secondary text-secondary-foreground rounded disabled:opacity-50"
-        >
+      <div class="mt-4 flex gap-2 justify-end">
+        <Button @click="addNewQuestion" :disabled="isLoading" class="border-1">
           Dodaj nowe pytanie
-        </button>
-        <button
-          @click="pushQuestions"
-          :disabled="isLoading"
-          class="px-4 py-2 bg-primary text-primary-foreground rounded disabled:opacity-50"
-        >
+        </Button>
+        <Button @click="pushQuestions" :disabled="isLoading" class="border-1">
           {{ isLoading ? "Zapisywanie..." : "Zapisz zmiany" }}
-        </button>
+        </Button>
       </div>
     </div>
     <div v-else>Nie udało się załadować danych quizu.</div>
