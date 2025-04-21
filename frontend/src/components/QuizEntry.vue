@@ -26,7 +26,7 @@ console.log(userStore, quiz);
 </script>
 <template>
   <div
-    class="flex gap-8 justify-between w-full max-w-[500px] rounded-lg px-4 py-2 backdrop-blur-lg backdrop-brightness-50 shadow-2xl"
+    class="flex gap-8 justify-between w-full max-w-[500px] rounded-lg px-4 py-2 shadow-2xl border-b-1"
   >
     <div class="flex flex-col">
       <h2 class="text-lg font-bold">{{ quiz.title }}</h2>

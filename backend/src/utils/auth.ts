@@ -38,7 +38,7 @@ export async function isQuizOwner(
   const quiz = await db.get("SELECT author_id FROM quizzes WHERE id = ?", [
     quizId,
   ]);
-  return quiz && quiz.author_id === +userId;
+  return quiz && quiz.author_id === userId;
 }
 
 export async function ensureQuizOwner(

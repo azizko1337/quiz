@@ -93,13 +93,15 @@ export const questionMutations = {
     }
 
     const db = await dbPromise;
-    const result = await db.run(
+    const newQuestionId = uuidv4(); // Generate UUID before insertion
+    await db.run(
       "INSERT INTO questions (id, quiz_id, question, image) VALUES (?, ?, ?, ?)",
-      [uuidv4(), quizId, question, image]
+      [newQuestionId, quizId, question, image] // Use the generated UUID
     );
 
+    // Return the actual ID that was inserted
     return {
-      id: result.lastID,
+      id: newQuestionId, // Return the generated UUID
       quizId,
       question,
       image,

@@ -15,7 +15,7 @@ onMounted(async () => {
 
 <template>
   <div
-    class="bg-[url(/images/background.jpg)] bg-cover bg-no-repeat bg-center min-h-screen backdrop-blur-sm text-amber-50"
+    class="bg-[#121212] bg-cover bg-no-repeat bg-center min-h-screen backdrop-blur-sm text-amber-50"
   >
     <Header />
     <div class="flex gap-10 justify-center items-center min-h-[82vh]">

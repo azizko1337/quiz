@@ -184,13 +184,16 @@ async function canModifyQuestionContent(
     "SELECT quiz_id as quizId FROM questions WHERE id = ?",
     [questionId]
   );
-  if (!question) return false;
+  if (!question) {
+    console.log("no pytanie");
+    return false;
+  }
 
   // Check if user is the owner of the quiz
   const quiz = await db.get("SELECT author_id FROM quizzes WHERE id = ?", [
     question.quizId,
   ]);
-  return quiz && quiz.author_id.toString() === userId;
+  return quiz && quiz.author_id === userId;
 }
 
 // Helper function to check if a user can view answer details (including correctness)
@@ -212,7 +215,7 @@ async function canViewAnswer(
 
   // Check if quiz is public
   const quiz = await db.get(
-    "SELECT public, author_id FROM quizzes WHERE id = ?",
+    "SELECT isPublic, author_id FROM quizzes WHERE id = ?",
     [question.quizId]
   );
 
