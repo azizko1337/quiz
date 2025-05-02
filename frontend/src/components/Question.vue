@@ -12,7 +12,7 @@ const isMoreOptionsOpened = ref(false);
   >
     <div class="flex gap-4 items-center">
       <span
-        class="border-1 rounded-full w-8 h-8 flex justify-center items-center font-sans text-sm"
+        class="border-b-1 flex justify-center items-center w-8 h-8 font-sans text-sm"
         >9</span
       >
       <h2 class="grow">

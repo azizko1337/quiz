@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import Button from "@/components/ui/button/Button.vue";
 import Badge from "@/components/ui/badge/Badge.vue";
-import { RouterLink } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
 import type { Quiz } from "@/services/quizService";
 import { useUserStore } from "@/stores/userStore";
 import { Play, Pencil } from "lucide-vue-next";
+import { attemptService } from "@/services/attemptService";
 
 const { quiz } = defineProps<{
   quiz: Quiz;
 }>();
 
 const userStore = useUserStore();
+const router = useRouter();
 
 // Format date to a more readable format
 function formatDate(dateString: string): string {
@@ -20,6 +22,14 @@ function formatDate(dateString: string): string {
     month: "2-digit",
     year: "numeric",
   });
+}
+
+async function startQuiz() {
+  const quizAttempt = await attemptService.persistQuizAttempt(
+    quiz.id,
+    userStore.user?.id
+  );
+  await router.push(`/attempts/${quizAttempt.id}`);
 }
 
 console.log(userStore, quiz);
@@ -51,9 +61,9 @@ console.log(userStore, quiz);
           >Edytuj <Pencil :size="14"
         /></Button>
       </RouterLink>
-      <RouterLink :to="`/quizzes/${quiz.id}`">
-        <Button class="border-b-1 w-full">Start <Play :size="14" /></Button>
-      </RouterLink>
+      <Button class="border-b-1 w-full" @click="startQuiz"
+        >Start <Play :size="14"
+      /></Button>
     </div>
   </div>
 </template>
