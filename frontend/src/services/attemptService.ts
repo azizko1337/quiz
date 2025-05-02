@@ -77,6 +77,24 @@ export const attemptService = {
     return data.persistQuizAttempt;
   },
 
+  deleteQuizAttempt: async (id: string) => {
+    const { data } = await apolloClient.mutate({
+      mutation: gql`
+        mutation DeleteQuizAttempt($id: ID!) {
+          deleteQuizAttempt(id: $id) {
+            id
+            quizId
+            userId
+            score
+            createdAt
+          }
+        }
+      `,
+      variables: { id },
+    });
+    return data.deleteQuizAttempt;
+  },
+
   persistQuestionAttempt: async (
     questionId: string,
     quizAttemptId: string,
