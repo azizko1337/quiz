@@ -3,8 +3,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Check, Ellipsis } from "lucide-vue-next";
 import { ref } from "vue";
+import type { Question } from "@/service/questionService";
 
 const isMoreOptionsOpened = ref(false);
+const { question }: { question: Question } = defineProps({
+  question: {
+    type: Object<Question>,
+    required: true,
+  },
+});
 </script>
 <template>
   <form
@@ -13,11 +20,9 @@ const isMoreOptionsOpened = ref(false);
     <div class="flex gap-4 items-center">
       <span
         class="border-b-1 flex justify-center items-center w-8 h-8 font-sans text-sm"
-        >9</span
-      >
+      ></span>
       <h2 class="grow">
-        Bardzo zaawansowane testowe pytanie dolor sit amet 122342 sad asd asd
-        as?
+        {{ question.question }}
       </h2>
       <Button
         @click.prevent="isMoreOptionsOpened = !isMoreOptionsOpened"

@@ -128,4 +128,23 @@ export const attemptService = {
     });
     return data.persistQuestionAttempt;
   },
+
+  getQuestionAttempts: async (quizAttemptId: string) => {
+    const { data } = await apolloClient.query({
+      query: gql`
+        query GetQuestionAttempts($quizAttemptId: ID!) {
+          questionAttempts(quizAttemptId: $quizAttemptId) {
+            id
+            questionId
+            quizAttemptId
+            answerId
+            answerBody
+            createdAt
+          }
+        }
+      `,
+      variables: { quizAttemptId },
+    });
+    return data.questionAttempts;
+  },
 };
