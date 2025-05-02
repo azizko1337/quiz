@@ -87,7 +87,7 @@ export const questionAttemptMutations = {
         [quizAttemptId]
       );
 
-      if (!quizAttempt || quizAttempt.userId.toString() !== user.id) {
+      if (!quizAttempt || quizAttempt.userId !== user.id) {
         throw new AuthorizationError(
           "You can only answer questions in your own quiz attempts"
         );
@@ -96,8 +96,8 @@ export const questionAttemptMutations = {
 
     // Check if an attempt already exists
     const existingAttempt = await db.get(
-      "SELECT id FROM question_attempts WHERE question_id = ? AND quiz_attempt_id = ?",
-      [questionId, quizAttemptId]
+      "SELECT id FROM question_attempts WHERE answer_id = ? AND quiz_attempt_id = ?",
+      [answerId, quizAttemptId]
     );
 
     if (existingAttempt) {

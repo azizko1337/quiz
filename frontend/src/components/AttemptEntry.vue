@@ -2,14 +2,17 @@
 import Button from "@/components/ui/button/Button.vue";
 import Badge from "@/components/ui/badge/Badge.vue";
 import { RouterLink, useRouter } from "vue-router";
-import type { Quiz } from "@/services/quizService";
+import { quizService, type Quiz } from "@/services/quizService";
 import { useUserStore } from "@/stores/userStore";
 import { Play, Pencil } from "lucide-vue-next";
-import { attemptService } from "@/services/attemptService";
+import { attemptService, type QuizAttempt } from "@/services/attemptService";
+import { ref, onMounted } from "vue";
 
-const { quiz } = defineProps<{
-  quiz: Quiz;
+const { attempt } = defineProps<{
+  attempt: QuizAttempt;
 }>();
+
+const quiz = ref<Quiz | null>(null);
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -25,12 +28,19 @@ function formatDate(dateString: string): string {
 }
 
 async function startQuiz() {
-  const quizAttempt = await attemptService.persistQuizAttempt(
-    quiz.id,
-    userStore.user?.id ?? ""
-  );
-  await router.push(`/attempts/${quizAttempt.id}`);
+  if (quiz.value) {
+    const quizAttempt = await attemptService.persistQuizAttempt(
+      quiz.value.id,
+      userStore.user?.id ?? ""
+    );
+    await router.push(`/attempts/${quizAttempt.id}`);
+  }
 }
+
+onMounted(async () => {
+  quiz.value = await quizService.getQuiz(attempt.quizId);
+  console.log(attempt, quiz.value);
+});
 
 console.log(userStore, quiz);
 </script>
@@ -39,23 +49,23 @@ console.log(userStore, quiz);
     class="bg-gradient-to-r from-gray-900 to-zinc-900 flex gap-8 justify-between w-full max-w-[500px] rounded-lg px-4 py-3 shadow-2xl border-y-2"
   >
     <div class="flex flex-col">
-      <h2 class="text-lg font-bold">{{ quiz.title }}</h2>
-      <p v-if="quiz.description" class="text-md text-gray-500">
-        {{ quiz.description }}
+      <h2 class="text-lg font-bold">{{ quiz?.title }}</h2>
+      <p v-if="quiz?.description" class="text-md text-gray-500">
+        {{ quiz?.description }}
       </p>
       <div class="grow p-1"></div>
       <p class="text-sm text-accent">
-        Created by <Badge>{{ quiz.author?.username || "Unknown" }}</Badge
+        Created by <Badge>{{ quiz?.author?.username || "Unknown" }}</Badge
         >,
-        <Badge>{{ formatDate(quiz.createdAt) }}</Badge>
-        <Badge v-if="quiz.isPublic" variant="outline">Publiczny</Badge>
+        <Badge>{{ formatDate(quiz?.createdAt ?? "") }}</Badge>
+        <Badge v-if="quiz?.isPublic" variant="outline">Publiczny</Badge>
         <Badge v-else variant="outline">Niepubliczny</Badge>
       </p>
     </div>
     <div class="flex flex-col justify-end items-stretch gap-2">
       <RouterLink
-        v-if="quiz.authorId === userStore?.user?.id"
-        :to="`/quizzes/${quiz.id}/edit`"
+        v-if="quiz?.authorId === userStore?.user?.id"
+        :to="`/quizzes/${quiz?.id}/edit`"
       >
         <Button class="border-b-1 w-full" variant="secondary"
           >Edytuj <Pencil :size="14"

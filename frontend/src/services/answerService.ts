@@ -30,7 +30,7 @@ export const answerService = {
     return data.answer;
   },
 
-  getAnswers: async (questionId: string) => {
+  getAnswers: async (questionId: string): Promise<Answer[]> => {
     const { data } = await apolloClient.query({
       query: gql`
         query GetAnswers($questionId: ID!) {
