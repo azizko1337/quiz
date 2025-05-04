@@ -30,14 +30,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final user = Provider.of<UserProvider>(context).user;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Twój profil")),
+      appBar: AppBar(title: const Text("Mój profil")),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Witaj ${user?.username}"),
+              Text("Witaj ${user?.username}!"),
               ElevatedButton(
                 onPressed: () async {
                   await AuthService().logout(context);
