@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
+import '../../data/lib/models/user_model.dart';
+import '../../data/lib/providers/user_provider.dart';
 import '../../data/services/auth_service.dart';
 import '../../data/lib/getUser.dart';
 
@@ -16,7 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final secureStorage = FlutterSecureStorage();
 
   bool _hasJwt = false;
-  dynamic user = null;
+  UserModel? _userFromStorage;
+  bool _canBiometric = false;
 
   @override
   void initState() {
@@ -26,9 +32,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _checkForJwt() async {
     final token = await secureStorage.read(key: 'jwt');
-    setState(() async {
+    final userFromStorage = await secureStorage.read(key: 'user') ?? '';
+    final canBiometric = await auth.canCheckBiometrics && await auth.isDeviceSupported();
+
+    setState(() {
       _hasJwt = token != null && token.isNotEmpty;
-      user = await getUser();
+      _userFromStorage = UserModel.fromMap(jsonDecode(userFromStorage));
+      _canBiometric = canBiometric;
     });
   }
 
@@ -36,27 +46,20 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
 
   Future<void> _authenticateBiometric() async {
-    if (await auth.canCheckBiometrics && await auth.isDeviceSupported()) {
-      final bool didAuthenticate = await auth.authenticate(
-        localizedReason: 'Zaloguj się odciskiem palca',
-        options: const AuthenticationOptions(biometricOnly: true),
-      );
+    final bool didAuthenticate = await auth.authenticate(
+      localizedReason: 'Zaloguj się odciskiem palca',
+      options: const AuthenticationOptions(biometricOnly: true),
+    );
 
-      if (didAuthenticate) {
-        showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-            title: const Text('Sukces'),
-            content: const Text('Hello World'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
-      }
+    if (didAuthenticate) {
+      final userData = await secureStorage.read(key: 'user');
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      userProvider.setUser(UserModel.fromMap(jsonDecode(userData!)));
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Pomyślnie zalogowano!')),
+      );
+      Navigator.pop(context);
     }
   }
 
@@ -87,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Logowanie ${user?['username']}")),
+      appBar: AppBar(title: const Text("Logowanie")),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -110,9 +113,9 @@ class _LoginScreenState extends State<LoginScreen> {
               child: const Text('Zaloguj się'),
             ),
             const SizedBox(height: 16),
-            if(_hasJwt) ElevatedButton(
+            if(_hasJwt && _canBiometric) ElevatedButton(
               onPressed: _authenticateBiometric,
-              child: const Text('Zaloguj się odciskiem palca'),
+              child: Text('Zaloguj się odciskiem palca jako ${_userFromStorage?.username}'),
             ),
           ],
         ),

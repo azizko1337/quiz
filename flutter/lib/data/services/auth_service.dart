@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -58,7 +60,7 @@ class AuthService {
     if (token != null) {
       await secureStorage.write(key: 'jwt', value: token);
     }
-    await secureStorage.write(key: 'user', value: userData.toString());
+    await secureStorage.write(key: 'user', value: jsonEncode(userData));
 
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     userProvider.setUser(UserModel.fromMap(userData));
@@ -67,10 +69,12 @@ class AuthService {
   }
 
   Future<void> logout() async {
+    await secureStorage.delete(key: 'user');
     await secureStorage.delete(key: 'jwt');
   }
 
   Future<String?> getJwt() async {
+    await secureStorage.delete(key: 'user');
     return await secureStorage.read(key: 'jwt');
   }
 }

@@ -29,19 +29,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final secureStorage = FlutterSecureStorage();
 
-  bool _hasJwt = false;
-  @override
-  void initState() {
-    super.initState();
-    _checkForJwt();
-  }
-  Future<void> _checkForJwt() async {
-    final token = await secureStorage.read(key: 'jwt');
-    setState(() {
-      _hasJwt = token != null && token.isNotEmpty;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
