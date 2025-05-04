@@ -7,6 +7,7 @@ const JWT_SECRET =
 
 export const authMutations = {
   login: async (_: any, { email, password }: any, context: any) => {
+    console.log(email, password);
     const db = await dbPromise;
 
     // Find user by email
@@ -45,6 +46,14 @@ export const authMutations = {
 
     // Store token in a cookie instead of header
     if (context.res) {
+      context.res.setHeader("authorization", `Bearer ${token}`);
+      context.res.setHeader("Access-Control-Expose-Headers", "authorization");
+      context.res.setHeader("Access-Control-Allow-Credentials", "true");
+      context.res.setHeader("Access-Control-Allow-Origin", "*");
+      context.res.setHeader(
+        "Access-Control-Allow-Methods",
+        "GET, POST, OPTIONS"
+      );
       context.res.cookie("auth_token", token, {
         httpOnly: false,
         secure: process.env.NODE_ENV === "production", // Secure in production
