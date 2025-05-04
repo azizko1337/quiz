@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:quiz_app/presentation/screens/profile_screen.dart';
 import 'package:quiz_app/presentation/screens/quizzes_screen.dart';
 import 'presentation/screens/login_screen.dart';
 import 'data/services/auth_service.dart';
@@ -36,7 +37,7 @@ class _MyAppState extends State<MyApp> {
     final List<dynamic> screens = [
       Center(child: Text("Search screen")),
       Center(child: Text("Profile screen")),
-      Center(child: Text("Profile screen")),
+      ProfileScreen()
     ];
 
     if (user == null) {

@@ -16,6 +16,8 @@ class AuthService {
 
   late GraphQLClient _client;
 
+  GraphQLClient get client => _client;
+
   void initClient(String graphqlEndpoint) {
     final httpLink = HttpLink(graphqlEndpoint);
 
