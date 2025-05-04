@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:quiz_app/presentation/screens/quizzes_screen.dart';
 import 'presentation/screens/login_screen.dart';
 import 'data/services/auth_service.dart';
 import 'package:provider/provider.dart';
@@ -11,9 +12,7 @@ Future<void> main() async {
 
   runApp(
     MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()),
-      ],
+      providers: [ChangeNotifierProvider(create: (_) => UserProvider())],
       child: MyApp(),
     ),
   );
@@ -29,31 +28,63 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final secureStorage = FlutterSecureStorage();
 
+  int _selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
+    final List<dynamic> screens = [
+      Center(child: Text("Search screen")),
+      Center(child: Text("Profile screen")),
+      Center(child: Text("Profile screen")),
+    ];
+
+    if (user == null) {
+      return MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        ),
+        home: Builder(
+          builder: (context) {
+            return Scaffold(
+              body: Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                    );
+                  },
+                  child: Text('Zaloguj się'),
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    }
 
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: Builder(
-        builder: (context) {
-          return Scaffold(
-            body: Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),
-                  );
-                },
-                child: Text('Zaloguj się ${user?.username}'),
-              ),
-            ),
-          );
-        },
+      home: Scaffold(
+        body: screens[_selectedIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+          ],
+        ),
       ),
     );
   }

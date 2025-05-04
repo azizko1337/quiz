@@ -68,9 +68,12 @@ class AuthService {
     return userData;
   }
 
-  Future<void> logout() async {
+  Future<void> logout(BuildContext context) async {
     await secureStorage.delete(key: 'user');
     await secureStorage.delete(key: 'jwt');
+
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    userProvider.clearUser();
   }
 
   Future<String?> getJwt() async {
