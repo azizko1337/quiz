@@ -30,7 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final user = Provider.of<UserProvider>(context).user;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Logowanie")),
+      appBar: AppBar(title: const Text("Twój profil")),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Center(

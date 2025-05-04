@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
     final List<dynamic> screens = [
-      Center(child: Text("Search screen")),
+      QuizzesScreen(),
       Center(child: Text("Profile screen")),
       ProfileScreen()
     ];
@@ -81,9 +81,9 @@ class _MyAppState extends State<MyApp> {
             });
           },
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-            BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+            BottomNavigationBarItem(icon: Icon(Icons.quiz), label: 'Quizy'),
+            BottomNavigationBarItem(icon: Icon(Icons.play_arrow_rounded), label: 'Moje podejścia'),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
           ],
         ),
       ),

@@ -23,7 +23,9 @@ class QuestionCard extends StatelessWidget {
             Text(question, style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 16),
             ...answers.map((a) => ElevatedButton(
-              onPressed: () => onAnswerSelected(a),
+              onPressed: () {
+                print(1);
+              },
               child: Text(a),
             ))
           ],
