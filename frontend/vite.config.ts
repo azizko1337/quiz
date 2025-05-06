@@ -8,6 +8,7 @@ import path from "node:path";
 export default defineConfig({
   server: {
     port: 8085,
+    allowedHosts: ["localhost", "quiz.azalupka.cc"],
   },
   preview: {
     port: 8085,
