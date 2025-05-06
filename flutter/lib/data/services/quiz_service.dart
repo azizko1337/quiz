@@ -1,9 +1,36 @@
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import '../lib/models/quiz_model.dart';
 import 'auth_service.dart'; // Assuming AuthService provides the GraphQL client
 
 class QuizService {
-  final GraphQLClient _client = AuthService().client; // Get client from AuthService
+  final GraphQLClient _client =
+      AuthService().client; // Get client from AuthService
+  final secureStorage = const FlutterSecureStorage();
+
+  // Helper method to get headers with token
+  Future<Context?> _getHeadersContext() async {
+    // Assuming AuthService has a method like getCurrentToken().
+    // This could be an instance method: AuthService().getCurrentToken()
+    // or a static method: AuthService.getCurrentToken().
+    // Adjust if your AuthService has a different way to provide the token (e.g., singleton instance).
+    final String? token = await secureStorage.read(
+      key: "jwt",
+    ); // Example: using an instance method
+
+    if (token != null && token.isNotEmpty) {
+      return Context.fromList([
+        HttpLinkHeaders(
+          headers: {
+            'Authorization': 'Bearer $token',
+            // If you specifically need to send it as a cookie header:
+            // 'Cookie': 'authToken=$token',
+          },
+        ),
+      ]);
+    }
+    return null;
+  }
 
   Future<List<Quiz>> getQuizzes({String? authorId}) async {
     final String query = """
@@ -21,10 +48,9 @@ class QuizService {
 
     final QueryOptions options = QueryOptions(
       document: gql(query),
-      variables: {
-        'authorId': authorId,
-      },
+      variables: {'authorId': authorId},
       fetchPolicy: FetchPolicy.networkOnly, // Or cache policies as needed
+      context: await _getHeadersContext(), // Add context with token
     );
 
     final QueryResult result = await _client.query(options);
@@ -57,6 +83,7 @@ class QuizService {
       document: gql(query),
       variables: {'id': id},
       fetchPolicy: FetchPolicy.networkOnly,
+      context: await _getHeadersContext(), // Add context with token
     );
 
     final QueryResult result = await _client.query(options);

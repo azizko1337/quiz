@@ -38,7 +38,7 @@ class _MyAppState extends State<MyApp> {
     final List<dynamic> screens = [
       QuizzesScreen(),
       AttemptsScreen(),
-      ProfileScreen()
+      ProfileScreen(),
     ];
 
     if (user == null) {
@@ -83,7 +83,10 @@ class _MyAppState extends State<MyApp> {
           },
           items: const [
             BottomNavigationBarItem(icon: Icon(Icons.quiz), label: 'Quizy'),
-            BottomNavigationBarItem(icon: Icon(Icons.play_arrow_rounded), label: 'Moje podejścia'),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.play_arrow_rounded),
+              label: 'Moje podejścia',
+            ),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
           ],
         ),

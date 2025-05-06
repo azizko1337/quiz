@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_app/data/lib/models/quiz_model.dart';
 
 class QuizCard extends StatelessWidget {
-  final String question;
-   List<String> answers = [];
+  final Quiz quiz;
 
-  QuizCard({
-    super.key,
-    required this.question
-  });
+  QuizCard({super.key, required this.quiz});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       margin: const EdgeInsets.all(16),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 5,
+      elevation: 3,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(question, style: Theme.of(context).textTheme.titleLarge),
+            Text(quiz.title, style: Theme.of(context).textTheme.titleLarge),
+            Text(quiz.description ?? "Brak opisu."),
+            Badge(label: Text(quiz.isPublic ? "Publiczny" : "Niepubliczny")),
+            Text("Utworzono ${quiz.createdAt}"),
             const SizedBox(height: 16),
-            ...answers.map((a) => ElevatedButton(
+            ElevatedButton(
               onPressed: () {
                 print(1);
               },
-              child: Text(a),
-            ))
+              child: Text("Start"),
+            ),
           ],
         ),
       ),

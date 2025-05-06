@@ -46,10 +46,9 @@ export const authMutations = {
 
     // Store token in a cookie instead of header
     if (context.res) {
-      context.res.setHeader("authorization", `Bearer ${token}`);
+      context.res.setHeader("authorization", `${token}`);
       context.res.setHeader("Access-Control-Expose-Headers", "authorization");
       context.res.setHeader("Access-Control-Allow-Credentials", "true");
-      context.res.setHeader("Access-Control-Allow-Origin", "*");
       context.res.setHeader(
         "Access-Control-Allow-Methods",
         "GET, POST, OPTIONS"
