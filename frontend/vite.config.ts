@@ -11,6 +11,7 @@ export default defineConfig({
   },
   preview: {
     port: 8085,
+    allowedHosts: ["localhost", "quiz.azalupka.cc"],
   },
   plugins: [
     vue(),
