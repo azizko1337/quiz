@@ -9,6 +9,9 @@ export default defineConfig({
   server: {
     port: 8085,
   },
+  preview: {
+    port: 8085,
+  },
   plugins: [
     vue(),
     tailwindcss(),
