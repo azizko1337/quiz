@@ -29,7 +29,7 @@ async function startServer() {
 
   // Configure CORS to allow requests from localhost:5173
   const corsOptions = {
-    origin: "http://192.168.0.103:5173",
+    origin: process.env.FRONTEND_URL,
     credentials: true,
   };
 
