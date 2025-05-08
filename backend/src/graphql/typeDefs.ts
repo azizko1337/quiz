@@ -103,6 +103,7 @@ export const typeDefs = `#graphql
     ): Answer!
     deleteAnswer(id: ID!): Boolean!
 
+    createQuizAttempt(quizId: ID!, userId: ID!): QuizAttempt!
     persistQuizAttempt(quizId: ID!, userId: ID!, score: Int): QuizAttempt!
     deleteQuizAttempt(id: ID!): Boolean!
 

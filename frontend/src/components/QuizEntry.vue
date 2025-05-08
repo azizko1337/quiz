@@ -25,7 +25,7 @@ function formatDate(dateString: string): string {
 }
 
 async function startQuiz() {
-  const quizAttempt = await attemptService.persistQuizAttempt(
+  const quizAttempt = await attemptService.createQuizAttempt(
     quiz.id,
     userStore.user?.id ?? ""
   );

@@ -55,6 +55,24 @@ export const attemptService = {
     return data.quizAttempts;
   },
 
+  createQuizAttempt: async (quizId: string, userId: string) => {
+    const { data } = await apolloClient.mutate({
+      mutation: gql`
+        mutation CreateQuizAttempt($quizId: ID!, $userId: ID!) {
+          createQuizAttempt(quizId: $quizId, userId: $userId) {
+            id
+            quizId
+            userId
+            score
+            createdAt
+          }
+        }
+      `,
+      variables: { quizId, userId },
+    });
+    return data.createQuizAttempt;
+  },
+
   persistQuizAttempt: async (
     quizId: string,
     userId: string,

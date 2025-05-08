@@ -47,6 +47,39 @@ export const quizAttemptQueries = {
 };
 
 export const quizAttemptMutations = {
+  createQuizAttempt: async (
+    _: any,
+    { quizId, userId }: any,
+    { authUser }: any
+  ) => {
+    // Ensure user is authenticated
+    const user = checkAuthenticated(authUser);
+
+    // Check if user has permission to create/update this attempt
+    if (user.id !== userId && user.role !== "ADMIN") {
+      throw new AuthorizationError(
+        "You can only create or update your own quiz attempts"
+      );
+    }
+
+    const db = await dbPromise;
+
+    const quizAttemptId = uuidv4();
+    // Create new attempt
+    const result = await db.run(
+      "INSERT INTO quiz_attempts (id, quiz_id, user_id, score) VALUES (?, ?, ?, ?)",
+      [quizAttemptId, quizId, userId, 0]
+    );
+
+    return {
+      id: quizAttemptId,
+      quizId,
+      userId,
+      score: 0,
+      createdAt: new Date().toISOString(),
+    };
+  },
+
   persistQuizAttempt: async (
     _: any,
     { quizId, userId, score }: any,

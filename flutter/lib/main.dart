@@ -11,6 +11,7 @@ import 'data/lib/providers/user_provider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   AuthService().initClient("http://192.168.0.103:4000");
+  // AuthService().initClient("https://apiquiz.azalupka.cc");
 
   runApp(
     MultiProvider(
