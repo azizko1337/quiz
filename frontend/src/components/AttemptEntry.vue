@@ -4,15 +4,17 @@ import Badge from "@/components/ui/badge/Badge.vue";
 import { RouterLink, useRouter } from "vue-router";
 import { quizService, type Quiz } from "@/services/quizService";
 import { useUserStore } from "@/stores/userStore";
-import { Play, Pencil } from "lucide-vue-next";
+import { Play, Pencil, Plus } from "lucide-vue-next";
 import { attemptService, type QuizAttempt } from "@/services/attemptService";
 import { ref, onMounted } from "vue";
+import { questionService, type Question } from "@/services/questionService";
 
 const { attempt } = defineProps<{
   attempt: QuizAttempt;
 }>();
 
 const quiz = ref<Quiz | null>(null);
+const questions = ref<Question[]>([]);
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -24,10 +26,12 @@ function formatDate(dateString: string): string {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
   });
 }
 
-async function startQuiz() {
+async function continueQuiz() {
   if (quiz.value) {
     const quizAttempt = await attemptService.persistQuizAttempt(
       quiz.value.id,
@@ -37,9 +41,20 @@ async function startQuiz() {
   }
 }
 
+async function startQuiz() {
+  if (quiz.value) {
+    const quizAttempt = await attemptService.createQuizAttempt(
+      quiz.value.id,
+      userStore.user?.id ?? ""
+    );
+    await router.push(`/attempts/${quizAttempt.id}`);
+  }
+}
+
 onMounted(async () => {
   quiz.value = await quizService.getQuiz(attempt.quizId);
-  console.log(attempt, quiz.value);
+  questions.value = await questionService.getQuestions(attempt.quizId);
+  console.log("qqq", questions.value.length);
 });
 
 console.log(userStore, quiz);
@@ -55,9 +70,18 @@ console.log(userStore, quiz);
       </p>
       <div class="grow p-1"></div>
       <p class="text-sm text-accent">
-        Created by <Badge>{{ quiz?.author?.username || "Unknown" }}</Badge
-        >,
-        <Badge>{{ formatDate(quiz?.createdAt ?? "") }}</Badge>
+        Wynik:
+        <Badge
+          >{{
+            Math.round(((attempt?.score ?? 0) / questions.length) * 100)
+          }}%</Badge
+        >
+      </p>
+      <p class="text-sm text-accent">
+        Podejście rozpoczęte
+        <Badge>{{ formatDate(attempt?.createdAt ?? "") }}</Badge>
+      </p>
+      <p class="text-sm text-accent">
         <Badge v-if="quiz?.isPublic" variant="outline">Publiczny</Badge>
         <Badge v-else variant="outline">Niepubliczny</Badge>
       </p>
@@ -68,11 +92,14 @@ console.log(userStore, quiz);
         :to="`/quizzes/${quiz?.id}/edit`"
       >
         <Button class="border-b-1 w-full" variant="secondary"
-          >Edytuj <Pencil :size="14"
+          >Edytuj quiz<Pencil :size="14"
         /></Button>
       </RouterLink>
+      <Button class="border-b-1 w-full" @click="continueQuiz"
+        >Uruchom podejście <Play :size="14"
+      /></Button>
       <Button class="border-b-1 w-full" @click="startQuiz"
-        >Start <Play :size="14"
+        >Nowe podejście <Plus :size="14"
       /></Button>
     </div>
   </div>

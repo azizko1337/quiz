@@ -35,6 +35,7 @@ const fetchAttempts = async () => {
 
 onMounted(() => {
   fetchAttempts();
+  console.log(attempts.value);
 });
 </script>
 

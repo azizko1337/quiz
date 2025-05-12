@@ -4,6 +4,7 @@ import {
   checkAdmin,
   AuthorizationError,
 } from "../../utils/auth";
+import { calculateAndUpdateScore } from "../../utils/calculateAndUpdateScore";
 import { v4 as uuidv4 } from "uuid";
 
 export const questionAttemptQueries = {
@@ -111,6 +112,8 @@ export const questionAttemptMutations = {
         ]
       );
 
+      calculateAndUpdateScore(quizAttemptId);
+
       // Return the updated attempt
       return db.get(
         "SELECT id, question_id as questionId, quiz_attempt_id as quizAttemptId, answer_id as answerId, answer_body as answerBody, created_at as createdAt FROM question_attempts WHERE id = ?",
@@ -128,6 +131,8 @@ export const questionAttemptMutations = {
           answerBody !== undefined ? answerBody : null,
         ]
       );
+
+      calculateAndUpdateScore(quizAttemptId);
 
       return {
         id: result.lastID,
