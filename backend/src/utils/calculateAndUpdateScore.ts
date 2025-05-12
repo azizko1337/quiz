@@ -44,7 +44,7 @@ export async function calculateAndUpdateScore(quizAttemptId: string) {
       );
 
       if (answer.is_correct) {
-        if (!userAnswer || userAnswer.answer_body) {
+        if (!userAnswer || !userAnswer.answer_body) {
           isQuestionCorrect = false;
           break;
         }
