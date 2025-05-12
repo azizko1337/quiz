@@ -32,10 +32,10 @@ export const questionQueries = {
     }
 
     // Check if quiz is public
-    const quiz = await db.get("SELECT public FROM quizzes WHERE id = ?", [
+    const quiz = await db.get("SELECT isPublic FROM quizzes WHERE id = ?", [
       question.quizId,
     ]);
-    if (quiz && quiz.public) {
+    if (quiz && quiz.isPublic) {
       return question;
     }
 
@@ -62,10 +62,10 @@ export const questionQueries = {
     }
 
     // Check if quiz is public
-    const quiz = await db.get("SELECT public FROM quizzes WHERE id = ?", [
+    const quiz = await db.get("SELECT isPublic FROM quizzes WHERE id = ?", [
       quizId,
     ]);
-    if (quiz && quiz.public) {
+    if (quiz && quiz.isPublic) {
       return db.all(
         "SELECT id, quiz_id as quizId, question, image, created_at as createdAt FROM questions WHERE quiz_id = ?",
         [quizId]

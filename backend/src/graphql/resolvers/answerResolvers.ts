@@ -16,15 +16,6 @@ export const answerQueries = {
 
     if (!answer) return null;
 
-    // Check if the quiz is public or if user is authorized to view it
-    if (!(await canViewAnswer(answer.questionId, authUser))) {
-      // Hide the correctness of the answer if not authorized
-      return {
-        ...answer,
-        isCorrect: undefined,
-      };
-    }
-
     return answer;
   },
 
@@ -34,15 +25,6 @@ export const answerQueries = {
       "SELECT id, question_id as questionId, answer, is_correct as isCorrect, image, created_at as createdAt FROM answers WHERE question_id = ?",
       [questionId]
     );
-
-    // Check if the quiz is public or if user is authorized to view it
-    if (!(await canViewAnswer(questionId, authUser))) {
-      // Hide the correctness of answers if not authorized
-      return answers.map((answer) => ({
-        ...answer,
-        isCorrect: undefined,
-      }));
-    }
 
     return answers;
   },
