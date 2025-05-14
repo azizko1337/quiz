@@ -184,7 +184,7 @@ async function handleDeleteAccount() {
 <template>
   <section
     v-if="userStore.user"
-    class="flex flex-col w-full max-w-2xl mx-auto gap-10 items-center backdrop-brightness-50 backdrop-blur-sm p-8 rounded-lg"
+    class="flex flex-col w-full max-w-2xl mx-auto gap-10 items-center p-8 rounded-lg"
   >
     <h1 class="text-2xl font-bold">Twój profil</h1>
 

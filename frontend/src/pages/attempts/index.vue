@@ -21,8 +21,9 @@ const fetchAttempts = async () => {
     error.value = null;
     const userId = userStore.user?.id;
     const data = await attemptService.getQuizAttempts(userId ?? "");
-    console.log(data);
-    attempts.value = data;
+    attempts.value = [...data].sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
   } catch (err) {
     error.value =
       err instanceof Error ? err.message : "Błąd podczas ładowania podejść";

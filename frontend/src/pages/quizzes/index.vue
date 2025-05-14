@@ -31,6 +31,9 @@ const fetchQuizzes = async (searchTerm?: string) => {
     } else {
       quizzes.value = data;
     }
+    quizzes.value = [...quizzes.value].sort((a, b) => {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
   } catch (err) {
     error.value =
       err instanceof Error ? err.message : "Błąd podczas ładowania quizów";

@@ -84,12 +84,13 @@ export const quizMutations = {
     }
 
     const db = await dbPromise;
+    const quizId = uuidv4();
     const result = await db.run(
       "INSERT INTO quizzes (id, author_id, title, description, isPublic) VALUES (?, ?, ?, ?, ?)",
-      [uuidv4(), authorId, title, description, isPublic]
+      [quizId, authorId, title, description, isPublic]
     );
     return {
-      id: result.lastID,
+      id: quizId,
       authorId,
       title,
       description,
