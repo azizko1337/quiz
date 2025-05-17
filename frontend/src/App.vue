@@ -16,9 +16,7 @@ onMounted(async () => {
 
 <template>
   <Toaster />
-  <div
-    class="bg-[#121212] bg-cover bg-no-repeat bg-center min-h-screen backdrop-blur-sm text-amber-50"
-  >
+  <div class="bg-[#121212] min-h-screen text-amber-50">
     <Header />
     <div class="flex gap-10 justify-center items-center min-h-[82vh]">
       <div class="max-md:hidden">

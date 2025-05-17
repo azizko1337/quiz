@@ -2,14 +2,17 @@
 import QuestionComponent from "@/components/Question.vue";
 import { useRoute } from "vue-router";
 import { onMounted, ref } from "vue";
-import { attemptService } from "@/services/attemptService";
+import { attemptService, type QuizAttempt } from "@/services/attemptService";
 import { quizService } from "@/services/quizService";
 import { questionService } from "@/services/questionService";
 import type { Question } from "@/services/questionService";
+import { useAttemptStore } from "@/stores/attemptStore";
+import AttemptMenu from "@/components/AttemptMenu.vue";
 
 const route = useRoute();
+const attemptStore = useAttemptStore();
 
-const attempt = ref(null);
+const attempt = ref<QuizAttempt | null>(null);
 const quiz = ref(null);
 const questions = ref<Question[]>([]);
 
@@ -18,6 +21,8 @@ onMounted(async () => {
   const _attempt = await attemptService.getQuizAttempt(attemptId);
   const _quiz = await quizService.getQuiz(_attempt.quizId);
   const _questions = await questionService.getQuestions(_attempt.quizId);
+
+  attemptStore.set(_attempt);
 
   attempt.value = _attempt;
   quiz.value = _quiz;
@@ -40,4 +45,5 @@ onMounted(async () => {
       />
     </li>
   </ul>
+  <AttemptMenu />
 </template>

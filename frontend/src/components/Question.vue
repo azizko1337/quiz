@@ -9,6 +9,9 @@ import type { Answer } from "@/services/answerService";
 import { attemptService } from "@/services/attemptService";
 import type { QuizAttempt, QuestionAttempt } from "@/services/attemptService";
 import type { Quiz } from "@/services/quizService";
+import { useAttemptStore } from "@/stores/attemptStore";
+
+const attemptStore = useAttemptStore();
 
 const isMoreOptionsOpened = ref(false);
 const {
@@ -47,6 +50,8 @@ async function handleAnswerChange(answerId: string, value: boolean) {
     answerId,
     value
   );
+
+  attemptStore.update();
 }
 
 onMounted(async () => {
