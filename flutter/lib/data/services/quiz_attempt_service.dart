@@ -1,11 +1,12 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import '../lib/models/quiz_attempt_model.dart';
 import '../lib/models/quiz_model.dart';
 import 'auth_service.dart';
 
-class QuizService {
+class QuizAttemptService {
   final GraphQLClient _client =
-      AuthService().client; // Get client from AuthService
+      AuthService().client;
   final secureStorage = const FlutterSecureStorage();
 
   Future<Context?> _getHeadersContext() async {
@@ -25,37 +26,35 @@ class QuizService {
     return null;
   }
 
-  Future<List<Quiz>> getQuizzes({String? authorId}) async {
+  Future<List<QuizAttempt>> getQuizAttempts({required String userId}) async {
     final String query = """
-      query GetQuizzes(\$authorId: ID) {
-        quizzes(authorId: \$authorId) {
+      query GetQuizAttempts(\$userId: ID!) {
+        quizAttempts(userId: \$userId) {
           id
-          authorId
-          title
-          description
+          quizId
+          userId
+          score
           createdAt
-          isPublic
         }
       }
     """;
 
     final QueryOptions options = QueryOptions(
       document: gql(query),
-      variables: {'authorId': authorId},
-      fetchPolicy: FetchPolicy.networkOnly, // Or cache policies as needed
-      context: await _getHeadersContext(), // Add context with token
+      variables: {'userId': userId},
+      fetchPolicy: FetchPolicy.networkOnly,
+      context: await _getHeadersContext(), //token!!!
     );
 
     final QueryResult result = await _client.query(options);
 
     if (result.hasException) {
       print(result.exception.toString());
-      throw Exception('Failed to load quizzes');
+      throw Exception('Failed to load quiz attempts');
     }
 
-    final List<dynamic> quizzesJson = result.data?['quizzes'] ?? [];
-    // TODO: Fetch author details separately if needed or adjust query/model
-    return quizzesJson.map((json) => Quiz.fromJson(json)).toList();
+    final List<dynamic> quizAttemptsJson = result.data?['quizAttempts'] ?? [];
+    return quizAttemptsJson.map((json) => QuizAttempt.fromJson(json)).toList();
   }
 
   Future<Quiz?> getQuiz(String id) async {

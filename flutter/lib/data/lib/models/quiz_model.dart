@@ -7,7 +7,7 @@ class Quiz {
   final String? description;
   final String createdAt;
   final bool isPublic;
-  final UserModel? author; // Optional: Include if you fetch author details
+  final UserModel? author;
 
   Quiz({
     required this.id,
@@ -40,7 +40,7 @@ class Quiz {
       'description': description,
       'createdAt': createdAt,
       'isPublic': isPublic,
-      'author': author?.toMap(), // Assuming User model has toMap
+      'author': author?.toMap(),
     };
   }
 }
