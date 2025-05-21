@@ -1,0 +1,70 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:local_auth/local_auth.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:provider/provider.dart';
+import 'package:quiz_app/data/services/question_service.dart';
+import 'package:quiz_app/data/services/quiz_attempt_service.dart';
+import '../../data/lib/models/question_model.dart';
+import '../../data/lib/models/quiz_attempt_model.dart';
+import '../../data/lib/models/quiz_model.dart';
+import '../../data/lib/models/user_model.dart';
+import '../../data/lib/providers/user_provider.dart';
+import '../../data/services/auth_service.dart';
+import '../../data/lib/getUser.dart';
+import '../widgets/quiz_attempt_card.dart';
+import '../widgets/question_card.dart';
+
+class AttemptScreen extends StatefulWidget {
+  const AttemptScreen({super.key, required this.quizAttempt, this.quiz});
+
+  final QuizAttempt quizAttempt;
+  final Quiz? quiz;
+
+  @override
+  State<AttemptScreen> createState() => _AttemptScreenState();
+}
+
+class _AttemptScreenState extends State<AttemptScreen> {
+  final questionService = QuestionService();
+  final quizAttemptService = QuizAttemptService();
+
+  QuizAttempt? _quizAttempt;
+  List<Question> _questions = [];
+
+  @override
+  void initState() {
+    _quizAttempt = widget.quizAttempt;
+    super.initState();
+    loadQuestions();
+  }
+
+  loadQuestions() async {
+    final questions = await questionService.getQuestions(
+      quizId: widget.quizAttempt.quizId,
+    );
+
+    setState(() {
+      _questions = questions;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Quiz ${widget.quiz?.title ?? ''}")),
+      body: ListView.builder(
+        itemCount: _questions.length,
+        itemBuilder: (context, index) {
+          if (_questions.isNotEmpty) {
+            final question = _questions[index];
+            return QuestionCard(question: question);
+          } else {
+            return Text("Brak pytań");
+          }
+        },
+      ),
+    );
+  }
+}

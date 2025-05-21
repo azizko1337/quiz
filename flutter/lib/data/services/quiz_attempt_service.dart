@@ -5,22 +5,15 @@ import '../lib/models/quiz_model.dart';
 import 'auth_service.dart';
 
 class QuizAttemptService {
-  final GraphQLClient _client =
-      AuthService().client;
+  final GraphQLClient _client = AuthService().client;
   final secureStorage = const FlutterSecureStorage();
 
   Future<Context?> _getHeadersContext() async {
-    final String? token = await secureStorage.read(
-      key: "jwt",
-    );
+    final String? token = await secureStorage.read(key: "jwt");
 
     if (token != null && token.isNotEmpty) {
       return Context.fromList([
-        HttpLinkHeaders(
-          headers: {
-            'Authorization': 'Bearer $token',
-          },
-        ),
+        HttpLinkHeaders(headers: {'Authorization': 'Bearer $token'}),
       ]);
     }
     return null;
@@ -57,16 +50,15 @@ class QuizAttemptService {
     return quizAttemptsJson.map((json) => QuizAttempt.fromJson(json)).toList();
   }
 
-  Future<Quiz?> getQuiz(String id) async {
+  Future<QuizAttempt?> getQuizAttempt(String id) async {
     final String query = """
-      query GetQuiz(\$id: ID!) {
-        quiz(id: \$id) {
+      query GetQuizAttempt(\$id: ID!) {
+        quizAttempt(id: \$id) {
           id
-          authorId
-          title
-          description
+          quizId
+          userId
+          score
           createdAt
-          isPublic
         }
       }
     """;
@@ -82,14 +74,50 @@ class QuizAttemptService {
 
     if (result.hasException) {
       print(result.exception.toString());
-      // Handle specific errors, e.g., not found vs. network error
-      throw Exception('Failed to load quiz');
+      throw Exception('Failed to load quiz attempt');
     }
 
-    if (result.data?['quiz'] == null) {
-      return null; // Quiz not found
+    if (result.data?['quizAttempt'] == null) {
+      return null;
     }
 
-    return Quiz.fromJson(result.data!['quiz']);
+    return QuizAttempt.fromJson(result.data!['quizAttempt']);
+  }
+
+  Future<QuizAttempt> createQuizAttempt({
+    required String quizId,
+    required String userId,
+  }) async {
+    final String mutation = """
+    mutation CreateQuizAttempt(\$quizId: ID!, \$userId: ID!) {
+      createQuizAttempt(quizId: \$quizId, userId: \$userId) {
+        id
+        quizId
+        userId
+        score
+        createdAt
+      }
+    }
+  """;
+
+    final MutationOptions options = MutationOptions(
+      document: gql(mutation),
+      variables: {'quizId': quizId, 'userId': userId},
+      context: await _getHeadersContext(),
+    );
+
+    final QueryResult result = await _client.mutate(options);
+
+    if (result.hasException) {
+      print(result.exception.toString());
+      throw Exception('Failed to create quiz attempt');
+    }
+
+    final data = result.data?['createQuizAttempt'];
+    if (data == null) {
+      throw Exception('No data returned for createQuizAttempt');
+    }
+
+    return QuizAttempt.fromJson(data);
   }
 }

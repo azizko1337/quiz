@@ -34,14 +34,17 @@ class _AttemptsScreenState extends State<AttemptsScreen> {
   void loadQuizAttempts() async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-    print("loading");
-    if(userProvider.user?.id != null){
-      final quizAttempts = await quizAttemptService.getQuizAttempts(userId: userProvider.user!.id);
+    if (userProvider.user?.id != null) {
+      final quizAttempts = await quizAttemptService.getQuizAttempts(
+        userId: userProvider.user!.id,
+      );
       setState(() {
         _quizAttempts = quizAttempts;
       });
-      print("pobrano");
-    }else{
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Błąd autoryzacji, wylogowano')),
+      );
       await AuthService().logout(context);
     }
   }

@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:quiz_app/data/lib/models/quiz_attempt_model.dart';
 import 'package:quiz_app/data/lib/models/quiz_model.dart';
+import 'package:quiz_app/data/services/quiz_attempt_service.dart';
 import 'package:quiz_app/data/services/quiz_service.dart';
+import 'package:quiz_app/presentation/screens/attempt_screen.dart';
+
+import '../../data/lib/providers/user_provider.dart';
 
 class QuizAttemptCard extends StatefulWidget {
   final QuizAttempt quizAttempt;
@@ -14,6 +19,7 @@ class QuizAttemptCard extends StatefulWidget {
 
 class _QuizAttemptCardState extends State<QuizAttemptCard> {
   final quizService = QuizService();
+  final quizAttemptService = QuizAttemptService();
 
   Quiz? _quiz = null;
 
@@ -33,7 +39,9 @@ class _QuizAttemptCardState extends State<QuizAttemptCard> {
 
   @override
   Widget build(BuildContext context) {
-    if (_quiz == null) {
+    final user = Provider.of<UserProvider>(context).user;
+
+    if (_quiz == null || user == null) {
       return Card(child: Center(child: CircularProgressIndicator()));
     }
 
@@ -58,16 +66,28 @@ class _QuizAttemptCardState extends State<QuizAttemptCard> {
               spacing: 10,
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    print(1);
+                  onPressed: () async {
+                    final newAttempt = await quizAttemptService.createQuizAttempt(quizId: _quiz!.id, userId: user.id);
+
+                    if(!context.mounted){
+                      return;
+                    }
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AttemptScreen(quizAttempt: newAttempt, quiz: _quiz!)),
+                    );
                   },
                   child: Text("Nowe podejście"),
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    print(2);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => AttemptScreen(quizAttempt: widget.quizAttempt, quiz: _quiz!)),
+                    );
                   },
-                  child: Text("Kontynnuj podejście"),
+                  child: Text("Kontynuuj podejście"),
                 ),
               ],
             ),
