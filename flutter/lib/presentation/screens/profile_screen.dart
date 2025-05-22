@@ -38,11 +38,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text("Witaj ${user?.username}!"),
-              ElevatedButton(
+              ElevatedButton.icon(
                 onPressed: () async {
                   await AuthService().logout(context);
                 },
-                child: const Text('Wyloguj się'),
+                label: const Text('Wyloguj się'),
+                icon: Icon(Icons.logout),
               ),
             ],
           ),

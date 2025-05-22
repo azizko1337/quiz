@@ -101,8 +101,12 @@ class _AttemptScreenState extends State<AttemptScreen> {
     return Scaffold(
       appBar: AppBar(title: Text("Quiz ${widget.quiz?.title ?? ''}")),
       body: ListView.builder(
-        itemCount: _questions.length,
+        itemCount: _questions.length + 1,
         itemBuilder: (context, index) {
+          if (index == _questions.length) {
+            return const SizedBox(height: 100);
+          }
+
           if (_questions.isNotEmpty) {
             final question = _questions[index];
             return QuestionCard(

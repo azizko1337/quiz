@@ -72,8 +72,9 @@ class _QuizAttemptCardState extends State<QuizAttemptCard> {
             const SizedBox(height: 16),
             Row(
               spacing: 10,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                ElevatedButton(
+                ElevatedButton.icon(
                   onPressed: () async {
                     final newAttempt = await quizAttemptService.createQuizAttempt(quizId: _quiz!.id, userId: user.id);
 
@@ -86,16 +87,20 @@ class _QuizAttemptCardState extends State<QuizAttemptCard> {
                       MaterialPageRoute(builder: (context) => AttemptScreen(quizAttempt: newAttempt, quiz: _quiz!)),
                     );
                   },
-                  child: Text("Nowe podejście"),
+                  label: Text("Nowe"),
+                  icon: Icon(Icons.add),
+                  iconAlignment: IconAlignment.end,
                 ),
-                ElevatedButton(
+                ElevatedButton.icon(
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => AttemptScreen(quizAttempt: widget.quizAttempt, quiz: _quiz!)),
                     );
                   },
-                  child: Text("Kontynuuj podejście"),
+                  label: Text("Kontynuuj"),
+                  icon: Icon(Icons.play_arrow),
+                  iconAlignment: IconAlignment.end,
                 ),
               ],
             ),

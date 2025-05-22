@@ -34,20 +34,34 @@ class QuizCard extends StatelessWidget {
             Badge(label: Text(quiz.isPublic ? "Publiczny" : "Niepubliczny")),
             Text("Utworzono ${quiz.createdAt}"),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () async {
-                final newAttempt = await quizAttemptService.createQuizAttempt(quizId: quiz.id, userId: user.id);
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () async {
+                    final newAttempt = await quizAttemptService
+                        .createQuizAttempt(quizId: quiz.id, userId: user.id);
 
-                if(!context.mounted){
-                  return;
-                }
+                    if (!context.mounted) {
+                      return;
+                    }
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AttemptScreen(quizAttempt: newAttempt, quiz: quiz)),
-                );
-              },
-              child: Text("Start"),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => AttemptScreen(
+                              quizAttempt: newAttempt,
+                              quiz: quiz,
+                            ),
+                      ),
+                    );
+                  },
+                  label: Text("Start"),
+                  icon: Icon(Icons.play_arrow),
+                  iconAlignment: IconAlignment.end,
+                ),
+              ],
             ),
           ],
         ),
