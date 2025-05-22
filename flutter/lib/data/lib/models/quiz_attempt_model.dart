@@ -2,7 +2,7 @@ class QuizAttempt {
   final String id;
   final String quizId;
   final String userId;
-  final int score;
+  final int? score;
   final String createdAt;
 
   QuizAttempt({

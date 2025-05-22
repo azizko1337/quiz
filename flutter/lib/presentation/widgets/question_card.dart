@@ -3,13 +3,20 @@ import 'package:quiz_app/data/lib/models/question_model.dart';
 import 'package:quiz_app/data/lib/models/answer_model.dart';
 import 'package:quiz_app/data/services/answer_service.dart';
 
+import '../../data/lib/models/quiz_attempt_model.dart';
+import '../../data/services/question_attempt_service.dart';
+
+typedef OnSelectionChanged = void Function(String questionId, List<Answer> selected, List<Answer> notSelected);
+
 class QuestionCard extends StatefulWidget {
   final Question question;
-  final ValueChanged<List<Answer>>? onSelectionChanged;
+  final QuizAttempt quizAttempt;
+  final OnSelectionChanged? onSelectionChanged;
 
-  const QuestionCard({
+  QuestionCard({
     super.key,
     required this.question,
+    required this.quizAttempt,
     this.onSelectionChanged,
   });
 
@@ -18,6 +25,8 @@ class QuestionCard extends StatefulWidget {
 }
 
 class _QuestionCardState extends State<QuestionCard> {
+  final questionAttemptService = QuestionAttemptService();
+
   List<Answer> _answers = [];
   Set<String> _selectedAnswerIds = {};
   bool _isLoading = true;
@@ -34,8 +43,18 @@ class _QuestionCardState extends State<QuestionCard> {
       final answers = await AnswerService().getAnswers(
         questionId: widget.question.id,
       );
+
+      Set<String> selectedAnswerIds = {};
+      final questionAttempts = await questionAttemptService.getQuestionAttempts(quizAttemptId: widget.quizAttempt.id);
+      for (var questionAttempt in questionAttempts) {
+        if(questionAttempt.answerBody == true && questionAttempt.answerId != null){
+          selectedAnswerIds.add(questionAttempt.answerId!);
+        }
+      }
+
       setState(() {
         _answers = answers;
+        _selectedAnswerIds = selectedAnswerIds;
         _isLoading = false;
       });
     } catch (e) {
@@ -103,7 +122,15 @@ class _QuestionCardState extends State<QuestionCard> {
                                   ),
                                 )
                                 .toList();
-                        widget.onSelectionChanged?.call(selected);
+                        final notSelected =
+                        _answers
+                            .where(
+                              (a) => !_selectedAnswerIds.contains(
+                            a.id.toString(),
+                          ),
+                        )
+                            .toList();
+                        widget.onSelectionChanged?.call(widget.question.id, selected, notSelected);
                       },
                     ),
                   )

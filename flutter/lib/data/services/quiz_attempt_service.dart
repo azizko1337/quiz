@@ -50,7 +50,7 @@ class QuizAttemptService {
     return quizAttemptsJson.map((json) => QuizAttempt.fromJson(json)).toList();
   }
 
-  Future<QuizAttempt?> getQuizAttempt(String id) async {
+  Future<QuizAttempt?> getQuizAttempt({required String id}) async {
     final String query = """
       query GetQuizAttempt(\$id: ID!) {
         quizAttempt(id: \$id) {

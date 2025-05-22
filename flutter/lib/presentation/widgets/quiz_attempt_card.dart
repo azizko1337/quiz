@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:quiz_app/data/lib/models/question_model.dart';
 import 'package:quiz_app/data/lib/models/quiz_attempt_model.dart';
 import 'package:quiz_app/data/lib/models/quiz_model.dart';
+import 'package:quiz_app/data/services/question_service.dart';
 import 'package:quiz_app/data/services/quiz_attempt_service.dart';
 import 'package:quiz_app/data/services/quiz_service.dart';
 import 'package:quiz_app/presentation/screens/attempt_screen.dart';
@@ -20,20 +22,24 @@ class QuizAttemptCard extends StatefulWidget {
 class _QuizAttemptCardState extends State<QuizAttemptCard> {
   final quizService = QuizService();
   final quizAttemptService = QuizAttemptService();
+  final questionService = QuestionService();
 
   Quiz? _quiz = null;
+  List<Question> _questions = [];
 
   @override
   void initState() {
     super.initState();
-    loadQuiz();
+    loadQuizAndQuestions();
   }
 
-  void loadQuiz() async {
-    // final quiz = await quizS.getQuizAttempts(userId: userProvider.user!.id);
+  void loadQuizAndQuestions() async {
     final quiz = await quizService.getQuiz(widget.quizAttempt.quizId);
+    final questions = await questionService.getQuestions(quizId: widget.quizAttempt.quizId);
+
     setState(() {
       _quiz = quiz;
+      _questions = questions;
     });
   }
 
@@ -44,6 +50,8 @@ class _QuizAttemptCardState extends State<QuizAttemptCard> {
     if (_quiz == null || user == null) {
       return Card(child: Center(child: CircularProgressIndicator()));
     }
+
+    final score = ((widget.quizAttempt.score ?? 0) *100 / _questions.length).round();
 
     return Card(
       margin: const EdgeInsets.all(16),
@@ -58,7 +66,7 @@ class _QuizAttemptCardState extends State<QuizAttemptCard> {
             Text(_quiz!.description ?? "Brak opisu."),
             Text("Rozpoczęto ${widget.quizAttempt.createdAt}"),
             Text(
-              "Wynik: ${123}%",
+              "Wynik: ${score}%",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),

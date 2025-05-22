@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:quiz_app/data/services/question_attempt_service.dart';
 import 'package:quiz_app/data/services/question_service.dart';
 import 'package:quiz_app/data/services/quiz_attempt_service.dart';
+import '../../data/lib/models/answer_model.dart';
 import '../../data/lib/models/question_model.dart';
 import '../../data/lib/models/quiz_attempt_model.dart';
 import '../../data/lib/models/quiz_model.dart';
@@ -29,6 +31,7 @@ class AttemptScreen extends StatefulWidget {
 class _AttemptScreenState extends State<AttemptScreen> {
   final questionService = QuestionService();
   final quizAttemptService = QuizAttemptService();
+  final questionAttemptService = QuestionAttemptService();
 
   QuizAttempt? _quizAttempt;
   List<Question> _questions = [];
@@ -50,6 +53,46 @@ class _AttemptScreenState extends State<AttemptScreen> {
     });
   }
 
+  refreshQuizAttempt() async {
+    final quizAttempt = await quizAttemptService.getQuizAttempt(
+      id: widget.quizAttempt.id,
+    );
+
+    setState(() {
+      _quizAttempt = quizAttempt;
+    });
+  }
+
+  onSelectionChanged(
+    String questionId,
+    List<Answer> selected,
+    List<Answer> notSelected,
+  ) async {
+    if (_quizAttempt == null) {
+      return;
+    }
+
+    for (final a in selected) {
+      await questionAttemptService.persistQuestionAttempt(
+        questionId: questionId,
+        quizAttemptId: _quizAttempt!.id,
+        answerId: a.id,
+        answerBody: true,
+      );
+    }
+
+    for (final a in notSelected) {
+      await questionAttemptService.persistQuestionAttempt(
+        questionId: questionId,
+        quizAttemptId: _quizAttempt!.id,
+        answerId: a.id,
+        answerBody: false,
+      );
+    }
+
+    refreshQuizAttempt();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,12 +102,17 @@ class _AttemptScreenState extends State<AttemptScreen> {
         itemBuilder: (context, index) {
           if (_questions.isNotEmpty) {
             final question = _questions[index];
-            return QuestionCard(question: question);
+            return QuestionCard(
+              question: question,
+              quizAttempt: widget.quizAttempt,
+              onSelectionChanged: onSelectionChanged,
+            );
           } else {
             return Text("Brak pytań");
           }
         },
       ),
+      bottomSheet: Text("123"),
     );
   }
 }
