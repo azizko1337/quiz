@@ -40,7 +40,7 @@ export const quizAttemptQueries = {
 
     const db = await dbPromise;
     return db.all(
-      "SELECT id, quiz_id as quizId, user_id as userId, score, created_at as createdAt FROM quiz_attempts WHERE user_id = ?",
+      "SELECT id, quiz_id as quizId, user_id as userId, score, created_at as createdAt FROM quiz_attempts WHERE user_id = ? ORDER BY datetime(created_at) DESC",
       [userId]
     );
   },

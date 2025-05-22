@@ -90,11 +90,14 @@ class _AttemptScreenState extends State<AttemptScreen> {
       );
     }
 
-    refreshQuizAttempt();
+    await refreshQuizAttempt();
   }
 
   @override
   Widget build(BuildContext context) {
+    final score =
+        ((_quizAttempt?.score ?? 0) * 100 / _questions.length).round();
+
     return Scaffold(
       appBar: AppBar(title: Text("Quiz ${widget.quiz?.title ?? ''}")),
       body: ListView.builder(
@@ -112,7 +115,44 @@ class _AttemptScreenState extends State<AttemptScreen> {
           }
         },
       ),
-      bottomSheet: Text("123"),
+      bottomSheet: Container(
+        padding: EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).primaryColor,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black26,
+              blurRadius: 8,
+              offset: Offset(0, -2),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              "Twój wynik",
+              style: TextStyle(color: Colors.white70, fontSize: 14),
+            ),
+            SizedBox(height: 8),
+            LinearProgressIndicator(
+              value: score / 100,
+              backgroundColor: Colors.white24,
+              valueColor: AlwaysStoppedAnimation(Colors.white),
+            ),
+            SizedBox(height: 8),
+            Text(
+              "$score%",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

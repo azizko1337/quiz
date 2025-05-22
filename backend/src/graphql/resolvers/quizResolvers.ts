@@ -35,13 +35,13 @@ export const quizQueries = {
       // If user is viewing their own quizzes - return all
       if (authUser && (authUser.id === authorId || authUser.role === "ADMIN")) {
         return db.all(
-          "SELECT id, author_id as authorId, title, description, isPublic, created_at as createdAt FROM quizzes WHERE author_id = ?",
+          "SELECT id, author_id as authorId, title, description, isPublic, created_at as createdAt FROM quizzes WHERE author_id = ? ORDER BY datetime(created_at) DESC",
           [authorId]
         );
       } else {
         // User is viewing someone else's quizzes - return only public ones
         return db.all(
-          "SELECT id, author_id as authorId, title, description, isPublic, created_at as createdAt FROM quizzes WHERE author_id = ? AND isPublic = 1",
+          "SELECT id, author_id as authorId, title, description, isPublic, created_at as createdAt FROM quizzes WHERE author_id = ? AND isPublic = 1 ORDER BY datetime(created_at) DESC",
           [authorId]
         );
       }
@@ -51,19 +51,19 @@ export const quizQueries = {
     if (authUser) {
       if (authUser.role === "ADMIN") {
         return db.all(
-          "SELECT id, author_id as authorId, title, description, isPublic, created_at as createdAt FROM quizzes"
+          "SELECT id, author_id as authorId, title, description, isPublic, created_at as createdAt FROM quizzes ORDER BY datetime(created_at) DESC"
         );
       } else {
         // Authenticated users see all public quizzes and their own private quizzes
         return db.all(
-          "SELECT id, author_id as authorId, title, description, isPublic, created_at as createdAt FROM quizzes WHERE isPublic = 1 OR author_id = ?",
+          "SELECT id, author_id as authorId, title, description, isPublic, created_at as createdAt FROM quizzes WHERE isPublic = 1 OR author_id = ? ORDER BY datetime(created_at) DESC",
           [authUser.id]
         );
       }
     } else {
       // Non-authenticated users only see public quizzes
       return db.all(
-        "SELECT id, author_id as authorId, title, description, isPublic, created_at as createdAt FROM quizzes WHERE isPublic = 1"
+        "SELECT id, author_id as authorId, title, description, isPublic, created_at as createdAt FROM quizzes WHERE isPublic = 1 ORDER BY datetime(created_at) DESC"
       );
     }
   },
