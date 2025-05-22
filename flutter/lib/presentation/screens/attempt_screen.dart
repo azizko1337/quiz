@@ -96,7 +96,9 @@ class _AttemptScreenState extends State<AttemptScreen> {
   @override
   Widget build(BuildContext context) {
     final score =
-        ((_quizAttempt?.score ?? 0) * 100 / _questions.length).round();
+        _questions.isNotEmpty
+            ? ((_quizAttempt?.score ?? 0) * 100 / _questions.length).round()
+            : 0;
 
     return Scaffold(
       appBar: AppBar(title: Text("Quiz ${widget.quiz?.title ?? ''}")),

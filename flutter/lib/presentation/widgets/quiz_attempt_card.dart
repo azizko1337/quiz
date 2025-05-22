@@ -35,7 +35,9 @@ class _QuizAttemptCardState extends State<QuizAttemptCard> {
 
   void loadQuizAndQuestions() async {
     final quiz = await quizService.getQuiz(widget.quizAttempt.quizId);
-    final questions = await questionService.getQuestions(quizId: widget.quizAttempt.quizId);
+    final questions = await questionService.getQuestions(
+      quizId: widget.quizAttempt.quizId,
+    );
 
     setState(() {
       _quiz = quiz;
@@ -51,7 +53,11 @@ class _QuizAttemptCardState extends State<QuizAttemptCard> {
       return Card(child: Center(child: CircularProgressIndicator()));
     }
 
-    final score = ((widget.quizAttempt.score ?? 0) *100 / _questions.length).round();
+    final score =
+        _questions.length > 0
+            ? ((widget.quizAttempt.score ?? 0) * 100 / _questions.length)
+                .round()
+            : 0;
 
     return Card(
       margin: const EdgeInsets.all(16),
@@ -76,15 +82,22 @@ class _QuizAttemptCardState extends State<QuizAttemptCard> {
               children: [
                 ElevatedButton.icon(
                   onPressed: () async {
-                    final newAttempt = await quizAttemptService.createQuizAttempt(quizId: _quiz!.id, userId: user.id);
+                    final newAttempt = await quizAttemptService
+                        .createQuizAttempt(quizId: _quiz!.id, userId: user.id);
 
-                    if(!context.mounted){
+                    if (!context.mounted) {
                       return;
                     }
 
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => AttemptScreen(quizAttempt: newAttempt, quiz: _quiz!)),
+                      MaterialPageRoute(
+                        builder:
+                            (context) => AttemptScreen(
+                              quizAttempt: newAttempt,
+                              quiz: _quiz!,
+                            ),
+                      ),
                     );
                   },
                   label: Text("Nowe"),
@@ -95,7 +108,13 @@ class _QuizAttemptCardState extends State<QuizAttemptCard> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => AttemptScreen(quizAttempt: widget.quizAttempt, quiz: _quiz!)),
+                      MaterialPageRoute(
+                        builder:
+                            (context) => AttemptScreen(
+                              quizAttempt: widget.quizAttempt,
+                              quiz: _quiz!,
+                            ),
+                      ),
                     );
                   },
                   label: Text("Kontynuuj"),
