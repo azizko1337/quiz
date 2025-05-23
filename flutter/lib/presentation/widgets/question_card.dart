@@ -31,6 +31,7 @@ class _QuestionCardState extends State<QuestionCard> {
   Set<String> _selectedAnswerIds = {};
   bool _isLoading = true;
   String? _error;
+  bool _showCorrectAnswers = false;
 
   @override
   void initState() {
@@ -76,9 +77,27 @@ class _QuestionCardState extends State<QuestionCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              widget.question.question,
-              style: Theme.of(context).textTheme.titleLarge,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    widget.question.question,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ),
+                IconButton(
+                  icon: Icon(
+                    _showCorrectAnswers ? Icons.visibility_off : Icons.visibility,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _showCorrectAnswers = !_showCorrectAnswers;
+                    });
+                  },
+                ),
+              ],
             ),
             if (widget.question.image != null &&
                 widget.question.image!.isNotEmpty)
@@ -95,18 +114,23 @@ class _QuestionCardState extends State<QuestionCard> {
                   },
                 ),
               ),
+            const SizedBox(height: 8),
             const SizedBox(height: 16),
             if (_isLoading)
               const Center(child: CircularProgressIndicator())
             else if (_error != null)
               Text(_error!, style: const TextStyle(color: Colors.red))
             else
-              ..._answers
-                  .map(
-                    (answer) => CheckboxListTile(
-                      title: Text(answer.answer),
-                      value: _selectedAnswerIds.contains(answer.id.toString()),
-                      onChanged: (checked) {
+              ..._answers.map((answer) => CheckboxListTile(
+                 // podświetlenie poprawnych
+                 tileColor: _showCorrectAnswers && answer.isCorrect
+                     ? Colors.green.withOpacity(0.2)
+                     : null,
+                 title: Text(answer.answer),
+                 value: _selectedAnswerIds.contains(answer.id.toString()),
+                 onChanged: _showCorrectAnswers
+                     ? null
+                     : (checked) {
                         setState(() {
                           if (checked == true) {
                             _selectedAnswerIds.add(answer.id.toString());
@@ -114,27 +138,18 @@ class _QuestionCardState extends State<QuestionCard> {
                             _selectedAnswerIds.remove(answer.id.toString());
                           }
                         });
-                        final selected =
-                            _answers
-                                .where(
-                                  (a) => _selectedAnswerIds.contains(
-                                    a.id.toString(),
-                                  ),
-                                )
-                                .toList();
-                        final notSelected =
-                        _answers
-                            .where(
-                              (a) => !_selectedAnswerIds.contains(
-                            a.id.toString(),
-                          ),
-                        )
+                        final selected = _answers
+                            .where((a) =>
+                                _selectedAnswerIds.contains(a.id.toString()))
                             .toList();
-                        widget.onSelectionChanged?.call(widget.question.id, selected, notSelected);
-                      },
-                    ),
-                  )
-                  .toList(),
+                        final notSelected = _answers
+                            .where((a) =>
+                                !_selectedAnswerIds.contains(a.id.toString()))
+                            .toList();
+                        widget.onSelectionChanged
+                            ?.call(widget.question.id, selected, notSelected);
+                   },
+               )).toList(),
           ],
         ),
       ),

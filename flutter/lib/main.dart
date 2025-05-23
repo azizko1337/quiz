@@ -51,16 +51,25 @@ class _MyAppState extends State<MyApp> {
         home: Builder(
           builder: (context) {
             return Scaffold(
-              body: Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()),
-                    );
-                  },
-                  child: Text('Zaloguj się'),
-                ),
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Image(image: AssetImage('assets/logo.png'), width: 200),
+                  const SizedBox(height: 64),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginScreen(),
+                          ),
+                        );
+                      },
+                      child: Text('Zaloguj się'),
+                    ),
+                  ),
+                ],
               ),
             );
           },
