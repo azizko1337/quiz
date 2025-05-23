@@ -58,7 +58,7 @@ class _AttemptsScreenState extends State<AttemptsScreen> {
         itemBuilder: (context, index) {
           if (_quizAttempts != null && _quizAttempts!.isNotEmpty) {
             final _quizAttempt = _quizAttempts![index];
-            return QuizAttemptCard(quizAttempt: _quizAttempt);
+            return QuizAttemptCard(quizAttempt: _quizAttempt, loadQuizAttempts: loadQuizAttempts);
           } else {
             return const Center(child: CircularProgressIndicator());
           }

@@ -10,10 +10,17 @@ import 'package:quiz_app/presentation/screens/attempt_screen.dart';
 
 import '../../data/lib/providers/user_provider.dart';
 
+typedef LoadQuizAttempts = void Function();
+
 class QuizAttemptCard extends StatefulWidget {
   final QuizAttempt quizAttempt;
+  final LoadQuizAttempts? loadQuizAttempts;
 
-  QuizAttemptCard({super.key, required this.quizAttempt});
+  QuizAttemptCard({
+    super.key,
+    required this.quizAttempt,
+    this.loadQuizAttempts,
+  });
 
   @override
   State<QuizAttemptCard> createState() => _QuizAttemptCardState();
@@ -89,7 +96,7 @@ class _QuizAttemptCardState extends State<QuizAttemptCard> {
                       return;
                     }
 
-                    Navigator.push(
+                    await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder:
@@ -99,14 +106,16 @@ class _QuizAttemptCardState extends State<QuizAttemptCard> {
                             ),
                       ),
                     );
+
+                    widget.loadQuizAttempts?.call();
                   },
                   label: Text("Nowe"),
                   icon: Icon(Icons.add),
                   iconAlignment: IconAlignment.end,
                 ),
                 ElevatedButton.icon(
-                  onPressed: () {
-                    Navigator.push(
+                  onPressed: () async {
+                    await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder:
@@ -116,6 +125,7 @@ class _QuizAttemptCardState extends State<QuizAttemptCard> {
                             ),
                       ),
                     );
+                    widget.loadQuizAttempts?.call();
                   },
                   label: Text("Kontynuuj"),
                   icon: Icon(Icons.play_arrow),
