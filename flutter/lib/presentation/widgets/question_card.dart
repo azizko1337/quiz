@@ -3,8 +3,9 @@ import 'package:quiz_app/data/lib/models/question_model.dart';
 import 'package:quiz_app/data/lib/models/answer_model.dart';
 import 'package:quiz_app/data/services/answer_service.dart';
 
-import '../../data/lib/models/quiz_attempt_model.dart';
+import 'package:quiz_app/data/lib/models/quiz_attempt_model.dart';
 import '../../data/services/question_attempt_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 typedef OnSelectionChanged = void Function(String questionId, List<Answer> selected, List<Answer> notSelected);
 
@@ -60,7 +61,7 @@ class _QuestionCardState extends State<QuestionCard> {
       });
     } catch (e) {
       setState(() {
-        _error = 'Nie udało się pobrać odpowiedzi.';
+        _error = AppLocalizations.of(context)!.errorFetchingQuestions;
         _isLoading = false;
       });
     }
@@ -107,7 +108,7 @@ class _QuestionCardState extends State<QuestionCard> {
                   widget.question.image!,
                   errorBuilder:
                       (context, error, stackTrace) =>
-                          const Text('Błąd wczytywania obrazka'),
+                          Text(AppLocalizations.of(context)!.imageError),
                   loadingBuilder: (context, child, progress) {
                     if (progress == null) return child;
                     return const CircularProgressIndicator();

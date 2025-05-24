@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../../data/lib/models/user_model.dart';
 import '../../data/lib/providers/user_provider.dart';
 import '../../data/services/auth_service.dart';
-import '../../data/lib/getUser.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _authenticateBiometric() async {
     final bool didAuthenticate = await auth.authenticate(
-      localizedReason: 'Zaloguj się odciskiem palca',
+      localizedReason: AppLocalizations.of(context)!.loginViaBiometric,
       options: const AuthenticationOptions(biometricOnly: true),
     );
 
@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
       userProvider.setUser(UserModel.fromMap(jsonDecode(userData!)));
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Pomyślnie zalogowano!')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.successfulLogin)),
       );
       Navigator.pop(context);
     }
@@ -71,18 +71,18 @@ class _LoginScreenState extends State<LoginScreen> {
       try {
         final user = await AuthService().login(email, password, context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Pomyślnie zalogowano!')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.successfulLogin)),
         );
         Navigator.pop(context);
       } catch (e) {
         passwordController.text = "";
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Nieprawidłowe hasło!')),
+          SnackBar(content: Text(AppLocalizations.of(context)!.wrongPassword)),
         );
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Uzupełnij wszystkie pola')),
+         SnackBar(content: Text(AppLocalizations.of(context)!.fillAllInputs)),
       );
     }
   }
@@ -90,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Logowanie")),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.logging)),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -104,18 +104,18 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 16),
             TextField(
               controller: passwordController,
-              decoration: const InputDecoration(labelText: 'Hasło'),
+              decoration: InputDecoration(labelText: AppLocalizations.of(context)!.password),
               obscureText: true,
             ),
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: _loginWithEmail,
-              child: const Text('Zaloguj się'),
+              child: Text(AppLocalizations.of(context)!.login),
             ),
             const SizedBox(height: 16),
             if(_hasJwt && _canBiometric) ElevatedButton(
               onPressed: _authenticateBiometric,
-              child: Text('Zaloguj się odciskiem palca jako ${_userFromStorage?.username}'),
+              child: Text('${AppLocalizations.of(context)!.loginViaBiometricAs} ${_userFromStorage?.username}'),
             ),
           ],
         ),

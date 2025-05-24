@@ -1,3 +1,4 @@
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:quiz_app/presentation/screens/attempts_screen.dart';
@@ -6,7 +7,8 @@ import 'package:quiz_app/presentation/screens/quizzes_screen.dart';
 import 'presentation/screens/login_screen.dart';
 import 'data/services/auth_service.dart';
 import 'package:provider/provider.dart';
-import 'data/lib/providers/user_provider.dart';
+import 'package:quiz_app/data/lib/providers/user_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,65 +44,79 @@ class _MyAppState extends State<MyApp> {
       ProfileScreen(),
     ];
 
-    if (user == null) {
-      return MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        ),
-        home: Builder(
-          builder: (context) {
-            return Scaffold(
-              body: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Image(image: AssetImage('assets/logo.png'), width: 200),
-                  const SizedBox(height: 64),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginScreen(),
-                          ),
-                        );
-                      },
-                      child: Text('Zaloguj się'),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      );
-    }
-
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'quiz.azalupka.cc',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: Scaffold(
-        body: screens[_selectedIndex],
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-          },
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.quiz), label: 'Quizy'),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.play_arrow_rounded),
-              label: 'Moje podejścia',
-            ),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profil'),
-          ],
-        ),
-      ),
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: AppLocalizations.supportedLocales,
+      home:
+          user == null
+              ? Builder(
+                builder: (context) {
+                  return Scaffold(
+                    body: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Image(
+                          image: AssetImage('assets/logo.png'),
+                          width: 200,
+                        ),
+                        const SizedBox(height: 64),
+                        Center(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoginScreen(),
+                                ),
+                              );
+                            },
+                            child: Text(AppLocalizations.of(context)!.login),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              )
+              : Builder(
+                builder: (context) {
+                  return Scaffold(
+                    body: screens[_selectedIndex],
+                    bottomNavigationBar: BottomNavigationBar(
+                      currentIndex: _selectedIndex,
+                      onTap: (index) {
+                        setState(() {
+                          _selectedIndex = index;
+                        });
+                      },
+                      items: [
+                        BottomNavigationBarItem(
+                          icon: Icon(Icons.quiz),
+                          label: AppLocalizations.of(context)!.navQuizzes,
+                        ),
+                        BottomNavigationBarItem(
+                          icon: Icon(Icons.play_arrow_rounded),
+                          label:
+                              AppLocalizations.of(context)!.navAttempts,
+                        ),
+                        BottomNavigationBarItem(
+                          icon: Icon(Icons.person),
+                          label: AppLocalizations.of(context)!.navProfile,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
     );
   }
 }

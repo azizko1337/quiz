@@ -12,6 +12,7 @@ import '../../data/services/auth_service.dart';
 import '../../data/lib/getUser.dart';
 import '../widgets/quiz_attempt_card.dart';
 import '../widgets/question_card.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AttemptsScreen extends StatefulWidget {
   const AttemptsScreen({super.key});
@@ -43,7 +44,7 @@ class _AttemptsScreenState extends State<AttemptsScreen> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Błąd autoryzacji, wylogowano')),
+         SnackBar(content: Text(AppLocalizations.of(context)!.errorLogouted)),
       );
       await AuthService().logout(context);
     }
@@ -52,7 +53,7 @@ class _AttemptsScreenState extends State<AttemptsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Moje podejścia")),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.navAttempts)),
       body: ListView.builder(
         itemCount: _quizAttempts == null ? 0 : _quizAttempts!.length,
         itemBuilder: (context, index) {

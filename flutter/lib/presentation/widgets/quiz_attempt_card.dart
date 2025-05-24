@@ -7,8 +7,8 @@ import 'package:quiz_app/data/services/question_service.dart';
 import 'package:quiz_app/data/services/quiz_attempt_service.dart';
 import 'package:quiz_app/data/services/quiz_service.dart';
 import 'package:quiz_app/presentation/screens/attempt_screen.dart';
-
-import '../../data/lib/providers/user_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:quiz_app/data/lib/providers/user_provider.dart';
 
 typedef LoadQuizAttempts = void Function();
 
@@ -76,10 +76,10 @@ class _QuizAttemptCardState extends State<QuizAttemptCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(_quiz!.title, style: Theme.of(context).textTheme.titleLarge),
-            Text(_quiz!.description ?? "Brak opisu."),
-            Text("Rozpoczęto ${widget.quizAttempt.createdAt}"),
+            Text(_quiz!.description ?? AppLocalizations.of(context)!.noDescription),
+            Text("${AppLocalizations.of(context)!.started} ${widget.quizAttempt.createdAt}"),
             Text(
-              "Wynik: ${score}%",
+              "${AppLocalizations.of(context)!.score}: ${score}%",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
@@ -109,7 +109,7 @@ class _QuizAttemptCardState extends State<QuizAttemptCard> {
 
                     widget.loadQuizAttempts?.call();
                   },
-                  label: Text("Nowe"),
+                  label: Text(AppLocalizations.of(context)!.newBtn),
                   icon: Icon(Icons.add),
                   iconAlignment: IconAlignment.end,
                 ),
@@ -127,7 +127,7 @@ class _QuizAttemptCardState extends State<QuizAttemptCard> {
                     );
                     widget.loadQuizAttempts?.call();
                   },
-                  label: Text("Kontynuuj"),
+                  label: Text(AppLocalizations.of(context)!.continueBtn),
                   icon: Icon(Icons.play_arrow),
                   iconAlignment: IconAlignment.end,
                 ),

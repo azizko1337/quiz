@@ -17,6 +17,7 @@ import '../../data/services/auth_service.dart';
 import '../../data/lib/getUser.dart';
 import '../widgets/quiz_attempt_card.dart';
 import '../widgets/question_card.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AttemptScreen extends StatefulWidget {
   const AttemptScreen({super.key, required this.quizAttempt, this.quiz});
@@ -117,7 +118,7 @@ class _AttemptScreenState extends State<AttemptScreen> {
               onSelectionChanged: onSelectionChanged,
             );
           } else {
-            return Text("Brak pytań");
+            return Text(AppLocalizations.of(context)!.noQuestions);
           }
         },
       ),

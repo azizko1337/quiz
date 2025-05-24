@@ -1,0 +1,31 @@
+{
+  "login": "Login",
+  "@login": {
+    "description": "Login button text"
+  },
+  "navQuizzes": "Quizzes",
+  "navAttempts": "My attempts",
+  "navProfile": "Profile",
+  "noQuestions": "No questions",
+  "errorLogouted": "Authorization error, you have been logged out",
+  "loginViaBiometric": "Login with fingerprint",
+  "wrongPassword": "Incorrect password",
+  "successfulLogin": "Successfully logged in",
+  "fillAllInputs": "Please fill in all inputs",
+  "loginViaBiometricAs": "Login with fingerprint as",
+  "logging": "Logging in",
+  "password": "Password",
+  "myProfile": "My profile",
+  "hello": "Hello",
+  "logout": "Logout",
+  "imageError": "Error loading image",
+  "errorFetchingQuestions": "Failed to fetch answers",
+  "noDescription": "No description",
+  "public": "Public",
+  "notPublic": "Private",
+  "created": "Created",
+  "started": "Started",
+  "score": "Score",
+  "newBtn": "New",
+  "continueBtn": "Continue"
+}

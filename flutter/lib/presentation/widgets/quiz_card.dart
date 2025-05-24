@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_app/data/lib/models/quiz_model.dart';
 import 'package:quiz_app/data/services/quiz_attempt_service.dart';
-
-import '../../data/lib/providers/user_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:quiz_app/data/lib/providers/user_provider.dart';
 import '../screens/attempt_screen.dart';
 
 class QuizCard extends StatelessWidget {
@@ -30,9 +30,9 @@ class QuizCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(quiz.title, style: Theme.of(context).textTheme.titleLarge),
-            Text(quiz.description ?? "Brak opisu."),
-            Badge(label: Text(quiz.isPublic ? "Publiczny" : "Niepubliczny")),
-            Text("Utworzono ${quiz.createdAt}"),
+            Text(quiz.description ?? AppLocalizations.of(context)!.noDescription),
+            Badge(label: Text(quiz.isPublic ? AppLocalizations.of(context)!.public : AppLocalizations.of(context)!.notPublic)),
+            Text("${AppLocalizations.of(context)!.created} ${quiz.createdAt}"),
             const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

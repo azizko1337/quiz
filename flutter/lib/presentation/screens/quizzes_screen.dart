@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quiz_app/data/lib/models/quiz_model.dart';
 import '../../data/services/quiz_service.dart';
 import '../widgets/quiz_card.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class QuizzesScreen extends StatefulWidget {
   const QuizzesScreen({super.key});
@@ -31,7 +32,7 @@ class _QuizzesScreenState extends State<QuizzesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Quizy")),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.navQuizzes)),
       body: ListView.builder(
         itemCount: _quizzes == null ? 0 : _quizzes!.length,
         itemBuilder: (context, index) {
