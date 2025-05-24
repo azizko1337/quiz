@@ -28,7 +28,7 @@ class Quiz {
       createdAt: json['createdAt'],
       isPublic: json['isPublic'],
       // Assuming author data might be nested or fetched separately
-      author: json['author'] != null ? UserModel.fromMap(json['author']) : null,
+      author: json['author']
     );
   }
 

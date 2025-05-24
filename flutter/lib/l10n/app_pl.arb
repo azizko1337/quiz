@@ -25,5 +25,7 @@
     "score": "Wynik",
     "newBtn": "Nowe",
     "continueBtn": "Kontynuuj",
-    "yourScore": "Twój wynik"
+    "yourScore": "Twój wynik",
+    "author": "Autor",
+    "unknown": "Nieznany"
 }

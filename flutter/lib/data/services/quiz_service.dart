@@ -1,9 +1,11 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:quiz_app/data/services/user_service.dart';
 import '../lib/models/quiz_model.dart';
 import 'auth_service.dart';
 
 class QuizService {
+  final UserService userService = UserService();
   final GraphQLClient _client =
       AuthService().client; // Get client from AuthService
   final secureStorage = const FlutterSecureStorage();
@@ -54,7 +56,9 @@ class QuizService {
     }
 
     final List<dynamic> quizzesJson = result.data?['quizzes'] ?? [];
-    // TODO: Fetch author details separately if needed or adjust query/model
+    for (var quizJson in quizzesJson) {
+      quizJson["author"] = await userService.getUser(id: quizJson["authorId"]);
+    }
     return quizzesJson.map((json) => Quiz.fromJson(json)).toList();
   }
 

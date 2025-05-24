@@ -28,5 +28,7 @@
   "score": "Score",
   "newBtn": "New",
   "continueBtn": "Continue",
-  "yourScore": "Your score"
+  "yourScore": "Your score",
+  "author": "Author",
+  "unknown": "Unknown"
 }

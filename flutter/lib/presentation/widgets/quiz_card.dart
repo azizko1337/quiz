@@ -32,6 +32,7 @@ class QuizCard extends StatelessWidget {
             Text(quiz.title, style: Theme.of(context).textTheme.titleLarge),
             Text(quiz.description ?? AppLocalizations.of(context)!.noDescription),
             Badge(label: Text(quiz.isPublic ? AppLocalizations.of(context)!.public : AppLocalizations.of(context)!.notPublic)),
+            Text("${AppLocalizations.of(context)!.author}: ${quiz.author?.username ?? AppLocalizations.of(context)!.unknown}"),
             Text("${AppLocalizations.of(context)!.created} ${quiz.createdAt}"),
             const SizedBox(height: 16),
             Row(
