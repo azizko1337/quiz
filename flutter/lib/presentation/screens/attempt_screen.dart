@@ -139,7 +139,7 @@ class _AttemptScreenState extends State<AttemptScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "Twój wynik",
+              AppLocalizations.of(context)!.yourScore,
               style: TextStyle(color: Colors.white70, fontSize: 14),
             ),
             SizedBox(height: 8),
