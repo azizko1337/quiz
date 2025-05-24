@@ -79,7 +79,7 @@ class _MyAppState extends State<MyApp> {
                                 ),
                               );
                             },
-                            child: Text(AppLocalizations.of(context)!.login),
+                            child: Text(AppLocalizations.of(context)?.login ?? ''),
                           ),
                         ),
                       ],
@@ -101,16 +101,16 @@ class _MyAppState extends State<MyApp> {
                       items: [
                         BottomNavigationBarItem(
                           icon: Icon(Icons.quiz),
-                          label: AppLocalizations.of(context)!.navQuizzes,
+                          label: AppLocalizations.of(context)?.navQuizzes ?? '',
                         ),
                         BottomNavigationBarItem(
                           icon: Icon(Icons.play_arrow_rounded),
                           label:
-                              AppLocalizations.of(context)!.navAttempts,
+                              AppLocalizations.of(context)?.navAttempts ?? '',
                         ),
                         BottomNavigationBarItem(
                           icon: Icon(Icons.person),
-                          label: AppLocalizations.of(context)!.navProfile,
+                          label: AppLocalizations.of(context)?.navProfile ?? '',
                         ),
                       ],
                     ),
