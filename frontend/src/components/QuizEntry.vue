@@ -36,7 +36,7 @@ console.log(userStore, quiz);
 </script>
 <template>
   <div
-    class="bg-gradient-to-r from-gray-900 to-zinc-900 flex gap-8 justify-between w-full max-w-[500px] rounded-lg px-4 py-3 shadow-2xl border-y-2"
+    class="flex gap-8 justify-between w-full max-w-[550px] rounded-lg px-4 py-3 shadow-2xl border-2"
   >
     <div class="flex flex-col">
       <h2 class="text-lg font-bold">{{ quiz.title }}</h2>
@@ -45,7 +45,9 @@ console.log(userStore, quiz);
       </p>
       <div class="grow p-1"></div>
       <p class="text-sm text-accent">
-        Created by <Badge>{{ quiz.author?.username || "Unknown" }}</Badge
+        Utworzono przez
+        <RouterLink :to="`/profiles/${quiz.author.id}`"
+          ><Badge>{{ quiz.author?.username || "Unknown" }}</Badge></RouterLink
         >,
         <Badge>{{ formatDate(quiz.createdAt) }}</Badge>
         <Badge v-if="quiz.isPublic" variant="outline">Publiczny</Badge>
@@ -57,11 +59,11 @@ console.log(userStore, quiz);
         v-if="quiz.authorId === userStore?.user?.id"
         :to="`/quizzes/${quiz.id}/edit`"
       >
-        <Button class="border-b-1 w-full" variant="secondary"
+        <Button class="border-1 w-full" variant="secondary"
           >Edytuj <Pencil :size="14"
         /></Button>
       </RouterLink>
-      <Button class="border-b-1 w-full" @click="startQuiz"
+      <Button class="border-1 w-full" @click="startQuiz"
         >Start <Play :size="14"
       /></Button>
     </div>

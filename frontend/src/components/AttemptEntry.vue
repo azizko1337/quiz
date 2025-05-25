@@ -61,7 +61,7 @@ console.log(userStore, quiz);
 </script>
 <template>
   <div
-    class="bg-gradient-to-r from-gray-900 to-zinc-900 flex gap-8 justify-between w-full max-w-[500px] rounded-lg px-4 py-3 shadow-2xl border-y-2"
+    class="flex gap-8 justify-between w-full max-w-[650px] rounded-lg px-4 py-3 shadow-2xl border-2"
   >
     <div class="flex flex-col">
       <h2 class="text-lg font-bold">{{ quiz?.title }}</h2>
@@ -87,18 +87,10 @@ console.log(userStore, quiz);
       </p>
     </div>
     <div class="flex flex-col justify-end items-stretch gap-2">
-      <RouterLink
-        v-if="quiz?.authorId === userStore?.user?.id"
-        :to="`/quizzes/${quiz?.id}/edit`"
-      >
-        <Button class="border-b-1 w-full" variant="secondary"
-          >Edytuj quiz<Pencil :size="14"
-        /></Button>
-      </RouterLink>
-      <Button class="border-b-1 w-full" @click="continueQuiz"
+      <Button class="border-1 w-full" @click="continueQuiz"
         >Uruchom podejście <Play :size="14"
       /></Button>
-      <Button class="border-b-1 w-full" @click="startQuiz"
+      <Button class="border-1 w-full" @click="startQuiz"
         >Nowe podejście <Plus :size="14"
       /></Button>
     </div>

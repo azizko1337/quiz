@@ -7,7 +7,7 @@ import type { User } from "@/services/userService";
 import { RouterLink } from "vue-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus } from "lucide-vue-next";
+import { Plus, WandSparkles } from "lucide-vue-next";
 import { useRoute } from "vue-router";
 import { userService } from "@/services/userService";
 
@@ -79,9 +79,19 @@ const isProfileMine = computed(() => {
       class="flex max-md:flex-col max-md:items-start gap-4 justify-between items-center mb-6"
     >
       <h1 class="text-5xl font-bold">Twoje quizy</h1>
-      <RouterLink to="/quizzes/create">
-        <Button class="border-1">Utwórz nowy quiz <Plus :size="16" /></Button>
-      </RouterLink>
+      <div class="flex flex-col gap-2">
+        <RouterLink to="/quizzes/create">
+          <Button class="border-1 w-full"
+            >Utwórz nowy quiz <Plus :size="16"
+          /></Button>
+        </RouterLink>
+        <RouterLink to="/quizzes/createAi">
+          <Button class="border-1 w-full"
+            >Utwórz nowy quiz <b class="animate-pulse text-amber-500">AI</b>
+            <WandSparkles :size="16"
+          /></Button>
+        </RouterLink>
+      </div>
     </div>
     <div
       v-else
@@ -96,7 +106,7 @@ const isProfileMine = computed(() => {
         type="text"
         placeholder="Wyszukaj quiz..."
         v-model="searchQuery"
-        class="max-w-sm backdrop-blur-lg backdrop-brightness-50"
+        class="max-w-sm"
       />
     </div>
 

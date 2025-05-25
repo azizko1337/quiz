@@ -26,7 +26,7 @@ const props = withDefaults(defineProps<Props>(), {
         props.class,
         'cursor-pointer',
         'relative',
-        'hover:bg-amber-500',
+        'hover:bg-blue-400',
         'hover:text-black'
       )
     "

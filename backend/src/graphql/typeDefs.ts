@@ -116,5 +116,7 @@ export const typeDefs = `#graphql
 
     login(email: String!, password: String!): User!
     logout: Boolean!
+
+    generateQuiz(title: String!, description: String!, isPublic: Boolean!, numberOfQuestions: Int!, additionalInfo: String): Quiz
   }
 `;

@@ -16,20 +16,12 @@ onMounted(async () => {
 
 <template>
   <Toaster />
-  <div class="bg-[#121212] min-h-screen text-amber-50">
+  <div class="min-h-screen text-[#121212]">
     <Header />
     <div class="flex gap-10 justify-center items-center min-h-[82vh]">
-      <div class="max-md:hidden">
-        <img class="" width="100" :src="Tribal" alt="tribal" />
-        <img class="" width="100" :src="Tribal" alt="tribal" />
-      </div>
       <main class="w-full max-w-7xl p-5">
         <router-view />
       </main>
-      <div class="max-md:hidden">
-        <img class="rotate-180" width="100" :src="Tribal" alt="tribal" />
-        <img class="rotate-180" width="100" :src="Tribal" alt="tribal" />
-      </div>
     </div>
     <Footer />
   </div>

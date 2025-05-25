@@ -11,6 +11,7 @@ import {
   questionAttemptMutations,
 } from "./questionAttemptResolvers";
 import { authMutations } from "./authResolvers";
+import { aiMutations } from "./aiResolvers";
 
 export const resolvers = {
   Query: {
@@ -29,5 +30,6 @@ export const resolvers = {
     ...quizAttemptMutations,
     ...questionAttemptMutations,
     ...authMutations,
+    ...aiMutations,
   },
 };

@@ -67,7 +67,7 @@ watch(searchQuery, (newQuery) => {
         type="text"
         placeholder="Wyszukaj quiz..."
         v-model="searchQuery"
-        class="max-w-sm backdrop-blur-lg backdrop-brightness-50"
+        class="max-w-sm"
       />
     </div>
 

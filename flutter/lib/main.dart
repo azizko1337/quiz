@@ -12,8 +12,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  AuthService().initClient("http://192.168.0.103:4000");
-  // AuthService().initClient("https://apiquiz.azalupka.cc");
+  // AuthService().initClient("http://192.168.0.103:4000");
+  AuthService().initClient("https://apiquiz.azalupka.cc");
 
   runApp(
     MultiProvider(

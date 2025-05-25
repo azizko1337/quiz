@@ -4,6 +4,7 @@ import { toTypedSchema } from "@vee-validate/zod";
 import { useRouter } from "vue-router";
 import * as z from "zod";
 import { ref } from "vue";
+import { Plus, WandSparkles } from "lucide-vue-next";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox"; // Import Checkbox
@@ -17,7 +18,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { quizService } from "@/services/quizService";
+import { aiService } from "@/services/aiService"; // Import AI service
 import { useUserStore } from "@/stores/userStore";
+import { Slider } from "@/components/ui/slider";
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -39,6 +42,14 @@ const formSchema = toTypedSchema(
       .string()
       .max(500, "Opis nie może być dłuższy niż 500 znaków")
       .optional(),
+    numberOfQuestions: z
+      .array(
+        z
+          .number()
+          .min(1, "Quiz musi zawierać co najmniej 1 pytanie")
+          .max(10, "Quiz nie może mieć więcej niż 10 pytań")
+      )
+      .default([5]),
     isPublic: z.boolean().default(true), // Add isPublic field, default to true
   })
 );
@@ -60,12 +71,12 @@ const onSubmit = form.handleSubmit(async (values) => {
     isSubmitting.value = true;
     createError.value = null;
 
-    console.log(userStore.user);
-    const quiz = await quizService.createQuiz(
-      userStore.user.id,
+    const quiz = await aiService.generateQuiz(
       values.title,
+      values.description || "",
       values.isPublic,
-      values.description
+      values.numberOfQuestions[0], // Use the first value from the array,
+      "additional info"
     );
 
     // Redirect to the newly created quiz edit page
@@ -84,7 +95,9 @@ const onSubmit = form.handleSubmit(async (values) => {
   <section
     class="flex flex-col gap-10 items-center justify-center p-5 w-full max-w-[600px] mx-auto rounded-lg"
   >
-    <h1 class="text-2xl font-bold">Utwórz nowy quiz</h1>
+    <h1 class="text-2xl font-bold">
+      Utwórz nowy quiz <b class="animate-pulse text-amber-500">AI</b>
+    </h1>
     <form class="flex flex-col gap-4 w-full max-w-md" @submit="onSubmit">
       <div v-if="createError" class="text-destructive mb-4">
         {{ createError }}
@@ -122,6 +135,29 @@ const onSubmit = form.handleSubmit(async (values) => {
         </FormItem>
       </FormField>
 
+      <FormField v-slot="{ componentField, value }" name="numberOfQuestions">
+        <FormItem>
+          <FormLabel>Liczba pytań</FormLabel>
+          <FormControl>
+            <Slider
+              class="bg-gray-400"
+              :model-value="componentField.modelValue"
+              :default-value="[5]"
+              :min="1"
+              :max="10"
+              :step="1"
+              :name="componentField.name"
+              @update:model-value="componentField['onUpdate:modelValue']"
+            />
+          </FormControl>
+          <FormDescription class="flex justify-between">
+            <span>Ilość pytań:</span>
+            <span>{{ value?.[0] ?? 5 }}</span>
+          </FormDescription>
+          <FormMessage />
+        </FormItem>
+      </FormField>
+
       <!-- Checkbox for Public/Private with boolean values -->
       <FormField v-slot="{ value, handleChange }" name="isPublic">
         <FormItem
@@ -142,8 +178,16 @@ const onSubmit = form.handleSubmit(async (values) => {
       </FormField>
 
       <div class="flex items-center my-4">
-        <Button class="border-1 mx-auto" type="submit" :disabled="isSubmitting">
-          {{ isSubmitting ? "Tworzenie..." : "Utwórz quiz i dodaj pytania" }}
+        <Button
+          class="border-1 mx-auto flex space-between"
+          type="submit"
+          :disabled="isSubmitting"
+        >
+          <WandSparkles class="mr-2" :size="16" />
+          <div class="grow"></div>
+          <span> {{ isSubmitting ? "Tworzenie..." : "Wygeneruj quiz" }}</span>
+          <div class="grow"></div>
+          <WandSparkles class="mr-2" :size="16" />
         </Button>
       </div>
     </form>
