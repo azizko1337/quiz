@@ -131,9 +131,6 @@ onMounted(async () => {
     </ul>
     <div class="flex justify-end gap-4">
       <Button @click.prevent="checkAnswers" class="border-1">
-        Sprawdź odpowiedzi
-      </Button>
-      <Button class="border-1">
         <Check :size="24" />
       </Button>
     </div>
