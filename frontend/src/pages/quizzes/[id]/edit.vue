@@ -356,6 +356,27 @@ async function submitEditTitle() {
     isLoading.value = false;
   }
 }
+
+// --- USUWANIE QUIZU ---
+async function deleteQuiz() {
+  if (!quiz.value) return;
+  try {
+    isLoading.value = true;
+    error.value = null;
+    await quizService.deleteQuiz(quiz.value.id);
+    toast.success("Quiz został usunięty.");
+    router.push("/");
+  } catch (err) {
+    const errorMessage =
+      err instanceof Error
+        ? err.message
+        : "Wystąpił błąd podczas usuwania quizu.";
+    error.value = errorMessage;
+    toast.error(errorMessage);
+  } finally {
+    isLoading.value = false;
+  }
+}
 </script>
 <template>
   <div>
@@ -422,6 +443,15 @@ async function submitEditTitle() {
         class="text-left h-[60vh] border rounded"
       />
       <div class="mt-4 flex gap-2 justify-end">
+        <Button
+          @click="deleteQuiz"
+          :disabled="isLoading"
+          class="border-1 bg-red-500 text-white transition-color hover:bg-red-600!"
+          variant="destructive"
+        >
+          Usuń quiz
+        </Button>
+        <div class="grow"></div>
         <Button @click="addNewQuestion" :disabled="isLoading" class="border-1">
           Dodaj nowe pytanie
         </Button>
