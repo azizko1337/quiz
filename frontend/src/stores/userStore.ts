@@ -38,22 +38,12 @@ export const useUserStore = defineStore("user", () => {
   }
 
   async function loadUser() {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("auth_token="))
-      ?.split("=")[1];
-
-    if (!token) return null;
-
     isLoading.value = true;
     error.value = null;
     try {
-      // This is a simplified implementation
-      // In a real app, you might want to make an API call to validate the token
-      const userFromToken = parseJwt(token);
-      if (userFromToken && userFromToken.id) {
-        user.value = userFromToken;
-        return user.value;
+      user.value = await userService.getMe();
+      if (!user.value) {
+        await userService.logout();
       }
       return null;
     } catch (err) {
@@ -64,23 +54,5 @@ export const useUserStore = defineStore("user", () => {
       isLoading.value = false;
     }
   }
-
-  // Helper function to parse JWT token
-  function parseJwt(token: string) {
-    try {
-      const base64Url = token.split(".")[1];
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      const jsonPayload = decodeURIComponent(
-        atob(base64)
-          .split("")
-          .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-          .join("")
-      );
-      return JSON.parse(jsonPayload);
-    } catch (e) {
-      return null;
-    }
-  }
-
   return { user, isLoading, error, login, logout, loadUser };
 });

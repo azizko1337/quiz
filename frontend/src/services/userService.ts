@@ -28,6 +28,23 @@ export const userService = {
     return data.user;
   },
 
+  getMe: async () => {
+    const { data } = await apolloClient.query({
+      query: gql`
+        query GetMe {
+          getMe {
+            id
+            username
+            email
+            role
+            createdAt
+          }
+        }
+      `,
+    });
+    return data.getMe;
+  },
+
   getUsers: async () => {
     const { data } = await apolloClient.query({
       query: gql`

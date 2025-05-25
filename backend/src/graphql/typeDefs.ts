@@ -57,6 +57,7 @@ export const typeDefs = `#graphql
 
   type Query {
     user(id: ID!): User
+    getMe: User
     users: [User!]!
     quiz(id: ID!): Quiz
     quizzes(authorId: ID): [Quiz!]!

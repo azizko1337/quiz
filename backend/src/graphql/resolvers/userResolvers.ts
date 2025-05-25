@@ -44,6 +44,17 @@ export const userQueries = {
       role: user.role,
     };
   },
+  getMe: async (_: any, __: any, { authUser }: any) => {
+    const authenticatedUser = checkAuthenticated(authUser);
+
+    const db = await dbPromise;
+    const user = await db.get(
+      "SELECT id, username, email, role, created_at as createdAt FROM users WHERE id = ?",
+      [authenticatedUser.id]
+    );
+
+    return user ?? null;
+  },
 };
 
 export const userMutations = {
