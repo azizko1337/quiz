@@ -10,6 +10,8 @@ import type { JSONEditorMode } from "json-editor-vue";
 import { toast } from "vue-sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 const route = useRoute();
 const router = useRouter();
@@ -26,6 +28,9 @@ const isEditingQuiz = ref(false);
 const jsonEditorModel = ref<string>("[]"); // Initialize with empty array JSON
 const jsonEditorMode = ref<JSONEditorMode>("text"); // Add state for editor mode
 const editorKey = ref(0); // Add a key for forcing re-render
+
+const editedTitle = ref("");
+const editedDescription = ref("");
 
 // Helper function to fetch all data
 async function fetchQuizData() {
@@ -319,12 +324,37 @@ async function pushQuestions() {
   }
 }
 
-async function submitEditTitle() {
-  isEditingQuiz.value = false;
+async function editTitle() {
+  if (quiz.value) {
+    editedTitle.value = quiz.value.title;
+    editedDescription.value = quiz.value.description || "";
+    isEditingQuiz.value = true;
+  }
 }
 
-async function editTitle() {
-  isEditingQuiz.value = true;
+async function submitEditTitle() {
+  if (!quiz.value) return;
+  try {
+    isLoading.value = true;
+    error.value = null;
+    await quizService.updateQuiz(
+      quiz.value.id,
+      editedTitle.value,
+      editedDescription.value
+    );
+    toast.success("Zaktualizowano tytuł i opis quizu.");
+    await fetchQuizData();
+    isEditingQuiz.value = false;
+  } catch (err) {
+    const errorMessage =
+      err instanceof Error
+        ? err.message
+        : "Wystąpił błąd podczas zapisywania tytułu/ opisu.";
+    error.value = errorMessage;
+    toast.error(errorMessage);
+  } finally {
+    isLoading.value = false;
+  }
 }
 </script>
 <template>
@@ -338,17 +368,37 @@ async function editTitle() {
     </div>
     <div v-else-if="quiz" class="flex flex-col gap-4">
       <form @submit.prevent="submitEditTitle" class="flex flex-col gap-2">
-        <h1 class="text-3xl">
-          Edycja quizu
+        <h1 class="text-3xl flex gap-2">
+          <p class="whitespace-nowrap">Edycja quizu</p>
           <b v-if="!isEditingQuiz" class="cursor-alias" @click="editTitle">{{
             quiz.title
-          }}</b
-          ><Input class="p-2 border-1" v-else />
+          }}</b>
+          <Input
+            v-else
+            v-model="editedTitle"
+            class="p-2 border-1 w-full max-w-[400px] text-2xl! font-bold!"
+          />
         </h1>
         <p v-if="!isEditingQuiz">
           {{ quiz.description || "Brak opisu quizu." }}
         </p>
-        <Textarea class="p-2 w-full max-w-[500px] border-1" v-else></Textarea>
+        <Textarea
+          v-else
+          v-model="editedDescription"
+          class="p-2 w-full max-w-[500px] border-1"
+        ></Textarea>
+        <div v-if="isEditingQuiz" class="flex gap-2">
+          <Button class="border-1" type="submit" :disabled="isLoading"
+            >Zapisz</Button
+          >
+          <Button
+            class="border-1"
+            type="button"
+            @click="isEditingQuiz = false"
+            variant="secondary"
+            >Anuluj</Button
+          >
+        </div>
       </form>
       <Alert class="max-w-xl">
         <AlertTitle>Podpowiedź</AlertTitle>
