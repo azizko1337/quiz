@@ -55,9 +55,9 @@ export const authMutations = {
       );
       context.res.cookie("auth_token", token, {
         httpOnly: false,
-        secure: process.env.NODE_ENV === "production", // Secure in production
+        secure: true, // Secure in production
         maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
-        sameSite: "strict",
+        sameSite: "None",
       });
     }
 
