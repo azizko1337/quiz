@@ -16,6 +16,12 @@ export const aiMutations = {
     const user = checkAuthenticated(authUser);
 
     const aiService = new AiService();
+    const questions = await aiService.generateQuiz(
+      title,
+      description,
+      numberOfQuestions,
+      additionalInfo
+    );
 
     // create quiz
     const db = await dbPromise;
@@ -23,13 +29,6 @@ export const aiMutations = {
     const quiz = await db.run(
       "INSERT INTO quizzes (id, author_id, title, description, isPublic) VALUES (?, ?, ?, ?, ?)",
       [quizId, user.id, title, description, isPublic]
-    );
-
-    const questions = await aiService.generateQuiz(
-      title,
-      description,
-      numberOfQuestions,
-      additionalInfo
     );
 
     for (const question of questions) {
