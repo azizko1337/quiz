@@ -1,6 +1,10 @@
-# Vue 3 + TypeScript + Vite
+## Frontend
 
-## Steps to run:
+### Uruchomienie serwera deweloperskiego:
 
 - `npm install`
 - `npm run dev`
+
+### Konfiguracja:
+
+- Uzupełnij `.env.development` prawdziwymi danymi (.env)
