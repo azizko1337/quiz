@@ -4,6 +4,7 @@ import {
   checkAdmin,
   AuthorizationError,
 } from "../../utils/auth";
+import { calculateAndUpdateScore } from "../../utils/calculateAndUpdateScore";
 import { v4 as uuidv4 } from "uuid";
 
 export const quizAttemptQueries = {
@@ -115,6 +116,8 @@ export const quizAttemptMutations = {
         "SELECT id, quiz_id as quizId, user_id as userId, score, created_at as createdAt FROM quiz_attempts WHERE id = ?",
         [existingAttempt.id]
       );
+
+      calculateAndUpdateScore(existingAttempt.id);
     } else {
       // Create new attempt
       const result = await db.run(

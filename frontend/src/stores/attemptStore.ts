@@ -39,6 +39,7 @@ export const useAttemptStore = defineStore("attempt", () => {
   });
 
   const score = computed(() => {
+    console.log("Calculating score", attempt.value, questions.value);
     return attempt.value && questions.value.length > 0
       ? Math.round(
           ((attempt?.value?.score ?? 0) * 100) / questions.value.length
