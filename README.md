@@ -31,7 +31,41 @@ Wspiera logowanie, rejestrację, zarządzanie profilem, śledzenie wyników oraz
 - Obsługa wielu języków (PL/EN)
 - Prosty, nowoczesny interfejs
 
-## Prezentacja wyglądu
+## Prezentacja wyglądu wersji web
+
+### Index page
+
+<img width="500" src="https://github.com/azizko1337/quiz/blob/main/_assets/web/index.png?raw=true">
+
+### Generowanie quizu przez Google Gemini
+
+<img width="500" src="https://github.com/azizko1337/quiz/blob/main/_assets/web/createAi.png?raw=true">
+
+### Edycja quizu
+
+<img width="500" src="https://github.com/azizko1337/quiz/blob/main/_assets/web/edit.png?raw=true">
+
+### Lista quizów
+
+<img width="500" src="https://github.com/azizko1337/quiz/blob/main/_assets/web/quizzes.png?raw=true">
+
+### Rozwiązywanie quizu
+
+<img width="500" src="https://github.com/azizko1337/quiz/blob/main/_assets/web/attempt.png?raw=true">
+
+### Podsumowanie rozwiązania
+
+<img width="200" src="https://github.com/azizko1337/quiz/blob/main/_assets/web/summary.png?raw=true">
+
+## Prezentacja wyglądu wersji mobile
+
+### Logowanie
+
+<img width="400" src="https://github.com/azizko1337/quiz/blob/main/_assets/mobile/login.jpeg?raw=true">
+
+### Rozwiązywanie quizu
+
+<img width="400" src="https://github.com/azizko1337/quiz/blob/main/_assets/mobile/attempt.jpeg?raw=true">
 
 ## Technologie
 
@@ -73,7 +107,10 @@ Aplikacja będzie dostępna pod domyślnym adresem: [http://localhost:5173](http
 
 ### Mobile (Flutter)
 
-Instrukcje w [flutter/README.md](flutter/README.md).
+```sh
+cd flutter
+flutter build apk
+```
 
 ## Autor
 
