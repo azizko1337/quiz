@@ -86,7 +86,7 @@ onMounted(async () => {
       <h2 class="grow">
         {{ question.question }}
       </h2>
-      <Button
+      <!-- <Button
         @click.prevent="isMoreOptionsOpened = !isMoreOptionsOpened"
         class="relative"
       >
@@ -99,7 +99,7 @@ onMounted(async () => {
         >
           sadasd
         </div>
-      </Button>
+      </Button> -->
     </div>
 
     <div v-if="question.image" class="w-full max-w-[500px]">

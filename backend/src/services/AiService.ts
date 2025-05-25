@@ -46,6 +46,8 @@ class AiService {
               `;
 
     let question: any = {};
+    const MAX_ATTEMPTS = 10;
+    let attempts = 0;
     do {
       let promptAnswer = await this.generateContent(prompt);
       if (promptAnswer.startsWith("```json")) {
@@ -58,6 +60,12 @@ class AiService {
         question = JSON.parse(promptAnswer);
       } catch (error) {
         question = {};
+      } finally {
+        attempts++;
+        if (attempts >= MAX_ATTEMPTS) {
+          console.error("Max attempts reached, returning empty question.");
+          return {};
+        }
       }
     } while (
       !question.question ||

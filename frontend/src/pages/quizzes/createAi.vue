@@ -37,10 +37,14 @@ const formSchema = toTypedSchema(
     title: z
       .string({ required_error: "Pole jest wymagane*" })
       .min(3, "Tytuł musi mieć co najmniej 3 znaki")
-      .max(100, "Tytuł jest za długi"),
+      .max(500, "Tytuł jest za długi"),
     description: z
       .string()
-      .max(500, "Opis nie może być dłuższy niż 500 znaków")
+      .max(100, "Opis nie może być dłuższy niż 100 znaków")
+      .optional(),
+    additionalInfo: z
+      .string()
+      .max(100, "Podpowiedzi nie mogą być dłuższe niż 100 znaków")
       .optional(),
     numberOfQuestions: z
       .array(
@@ -76,7 +80,7 @@ const onSubmit = form.handleSubmit(async (values) => {
       values.description || "",
       values.isPublic,
       values.numberOfQuestions[0], // Use the first value from the array,
-      "additional info"
+      values.additionalInfo || ""
     );
 
     // Redirect to the newly created quiz edit page
@@ -131,6 +135,23 @@ const onSubmit = form.handleSubmit(async (values) => {
             />
           </FormControl>
           <FormDescription>Krótki opis czego dotyczy quiz</FormDescription>
+          <FormMessage />
+        </FormItem>
+      </FormField>
+      <FormField v-slot="{ componentField }" name="additionalInfo">
+        <FormItem>
+          <FormLabel>Opis (opcjonalny)</FormLabel>
+          <FormControl>
+            <Input
+              type="text"
+              placeholder="Wpisz dodatkowe informacje dla AI"
+              v-bind="componentField"
+            />
+          </FormControl>
+          <FormDescription
+            >Dodatkowe informacje dla
+            <b class="text-amber-500 animate-pulse">AI</b></FormDescription
+          >
           <FormMessage />
         </FormItem>
       </FormField>
