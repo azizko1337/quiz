@@ -31,6 +31,8 @@ Wspiera logowanie, rejestrację, zarządzanie profilem, śledzenie wyników oraz
 - Obsługa wielu języków (PL/EN)
 - Prosty, nowoczesny interfejs
 
+## Prezentacja wyglądu
+
 ## Technologie
 
 - **Frontend:** Vue 3, TypeScript, Vite, TailwindCSS
