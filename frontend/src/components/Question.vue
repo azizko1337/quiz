@@ -14,6 +14,7 @@ import { useAttemptStore } from "@/stores/attemptStore";
 const attemptStore = useAttemptStore();
 
 const isMoreOptionsOpened = ref(false);
+const isCheckMode = ref(false);
 const {
   question,
   quiz,
@@ -52,6 +53,10 @@ async function handleAnswerChange(answerId: string, value: boolean) {
   );
 
   attemptStore.update();
+}
+
+function checkAnswers() {
+  isCheckMode.value = !isCheckMode.value;
 }
 
 onMounted(async () => {
@@ -105,12 +110,14 @@ onMounted(async () => {
       <li
         v-for="answer in answers"
         :key="answer.id"
-        class="items-top flex gap-x-2"
+        class="items-top flex gap-x-2 p-2 rounded-md"
+        :class="{ 'bg-green-200': isCheckMode && answer.isCorrect }"
       >
         <Checkbox
           :model-value="answersInputs[answer.id]"
           @update:model-value="(value) => handleAnswerChange(answer.id, value as boolean)"
           :id="answer.id"
+          :disabled="isCheckMode"
         />
         <div class="grid gap-1.5 leading-none">
           <label
@@ -123,9 +130,9 @@ onMounted(async () => {
       </li>
     </ul>
     <div class="flex justify-end gap-4">
-      <Button @click.prevent @dblclick="console.log(1)" class="border-1"
-        >Sprawdź odpowiedzi</Button
-      >
+      <Button @click.prevent="checkAnswers" class="border-1">
+        Sprawdź odpowiedzi
+      </Button>
       <Button class="border-1">
         <Check :size="24" />
       </Button>
