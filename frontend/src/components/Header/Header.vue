@@ -87,7 +87,7 @@ const isHeaderOpen = ref(false);
   <transition name="slide-down">
     <header
       v-if="isHeaderOpen"
-      class="w-full flex flex-col justify-between items-center py-10 absolute z-10 backdrop-brightness-50 backdrop-blur-2xl md:hidden"
+      class="w-full flex flex-col justify-between items-center py-10 absolute z-10 md:hidden bg-white shadow-md"
     >
       <RouterLink to="/" @click="isHeaderOpen = false">
         <div class="flex items-center gap-1 mb-6">

@@ -33,14 +33,14 @@ watch(hover, (newValue) => {
   <RouterLink
     @mouseover="hover = true"
     @mouseleave="hover = false"
-    class="p-2 relative"
+    class="p-2 relative hover:border-b-14 border-blue-400 transition-colors"
     :to="link.path"
     >{{ link.name }}
-    <img
+    <!-- <img
       v-if="hover"
       class="absolute w-full left-0 top-[80%] z-10 max-h-[800px]"
       :style="{ height: `${lavaHeight}px` }"
       :src="LavaImage"
-    />
+    /> -->
   </RouterLink>
 </template>
