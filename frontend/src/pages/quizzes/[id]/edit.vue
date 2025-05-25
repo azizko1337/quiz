@@ -337,18 +337,18 @@ async function editTitle() {
       Błąd: {{ error }}
     </div>
     <div v-else-if="quiz" class="flex flex-col gap-4">
-      <form @submit.prevent="submitEditTitle">
+      <form @submit.prevent="submitEditTitle" class="flex flex-col gap-2">
         <h1 class="text-3xl">
           Edycja quizu
           <b v-if="!isEditingQuiz" class="cursor-alias" @click="editTitle">{{
             quiz.title
           }}</b
-          ><Input class="p-2" v-else />
+          ><Input class="p-2 border-1" v-else />
         </h1>
         <p v-if="!isEditingQuiz">
           {{ quiz.description || "Brak opisu quizu." }}
         </p>
-        <Textarea class="p-2" v-else></Textarea>
+        <Textarea class="p-2 w-full max-w-[500px] border-1" v-else></Textarea>
       </form>
       <Alert class="max-w-xl">
         <AlertTitle>Podpowiedź</AlertTitle>
