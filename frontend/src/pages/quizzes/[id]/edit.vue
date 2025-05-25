@@ -21,6 +21,8 @@ const answers = ref<Answer[]>([]); // Store all answers for all questions in thi
 const isLoading = ref(true);
 const error = ref<string | null>(null);
 
+const isEditingQuiz = ref(false);
+
 const jsonEditorModel = ref<string>("[]"); // Initialize with empty array JSON
 const jsonEditorMode = ref<JSONEditorMode>("text"); // Add state for editor mode
 const editorKey = ref(0); // Add a key for forcing re-render
@@ -316,6 +318,14 @@ async function pushQuestions() {
     isLoading.value = false;
   }
 }
+
+async function submitEditTitle() {
+  isEditingQuiz.value = false;
+}
+
+async function editTitle() {
+  isEditingQuiz.value = true;
+}
 </script>
 <template>
   <div>
@@ -327,9 +337,19 @@ async function pushQuestions() {
       Błąd: {{ error }}
     </div>
     <div v-else-if="quiz" class="flex flex-col gap-4">
-      <h1 class="text-3xl">
-        Edycja quizu <b>{{ quiz.title }}</b>
-      </h1>
+      <form @submit.prevent="submitEditTitle">
+        <h1 class="text-3xl">
+          Edycja quizu
+          <b v-if="!isEditingQuiz" class="cursor-alias" @click="editTitle">{{
+            quiz.title
+          }}</b
+          ><Input class="p-2" v-else />
+        </h1>
+        <p v-if="!isEditingQuiz">
+          {{ quiz.description || "Brak opisu quizu." }}
+        </p>
+        <Textarea class="p-2" v-else></Textarea>
+      </form>
       <Alert class="max-w-xl">
         <AlertTitle>Podpowiedź</AlertTitle>
         <AlertDescription>
