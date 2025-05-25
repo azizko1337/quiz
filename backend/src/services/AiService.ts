@@ -50,7 +50,7 @@ class AiService {
               },
               answers: {
                 type: Type.ARRAY,
-                maxItems: 10,
+                maxItems: 5,
                 minItems: 2,
                 items: {
                   type: Type.OBJECT,
