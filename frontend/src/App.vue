@@ -2,7 +2,6 @@
 import "@/style.css";
 import Header from "@/components/Header/Header.vue";
 import Footer from "@/components/Footer.vue";
-import Tribal from "@/assets/images/tribal.webp";
 import { useUserStore } from "@/stores/userStore";
 import { onMounted } from "vue";
 import { Toaster } from "@/components/ui/sonner";
