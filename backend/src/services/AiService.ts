@@ -8,15 +8,11 @@ class AiService {
     additionalInfo: string
   ) {
     try {
-      const questions: Array<any> = [];
-      for (let i = 0; i < numberOfQuestions; i++) {
-        const question = await this.generateQuestion(
-          title,
-          description,
-          additionalInfo
-        );
-        questions.push(question);
-      }
+      const promises = Array.from({ length: numberOfQuestions }, () =>
+        this.generateQuestion(title, description, additionalInfo)
+      );
+
+      const questions = await Promise.all(promises);
 
       return questions;
     } catch (error) {
@@ -30,7 +26,7 @@ class AiService {
   private async generateQuestion(title, description, additionalInfo) {
     const prompt = `
               Wygeneruj pytanie z odpowiedziami do quizu na temat ${title} w podanym niżej formacie JSON. Możesz znaleźć na internecie jakieś linki do obrazka dla pytania. Zwróć tylko gotowy JSON.
-              Cały quiz ma opis: ${description}. Dodatkowe informacje od użytkownika: ${additionalInfo}.
+              Cały quiz ma opis: ${description}. Dodatkowe informacje od użytkownika: ${additionalInfo}. Jako odpowiedź podaj tylko format JSON, bez dodatkowych informacji. Przykład formatu JSON:
                 {
                     "question": "Nowe pytanie?",
                     "image": null,
@@ -48,14 +44,28 @@ class AiService {
                     ]
                   }
               `;
-    let promptAnswer = await this.generateContent(prompt);
-    if (promptAnswer.startsWith("```json")) {
-      promptAnswer = promptAnswer
-        .replace("```json", "")
-        .replace("```", "")
-        .trim();
-    }
-    return JSON.parse(promptAnswer);
+
+    let question: any = {};
+    do {
+      let promptAnswer = await this.generateContent(prompt);
+      if (promptAnswer.startsWith("```json")) {
+        promptAnswer = promptAnswer
+          .replace("```json", "")
+          .replace("```", "")
+          .trim();
+      }
+      try {
+        question = JSON.parse(promptAnswer);
+      } catch (error) {
+        question = {};
+      }
+    } while (
+      !question.question ||
+      !question.answers ||
+      question.answers.length < 2
+    );
+
+    return question;
   }
 
   private async generateContent(prompt: string): Promise<string> {

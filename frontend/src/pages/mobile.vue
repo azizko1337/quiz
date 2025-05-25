@@ -17,13 +17,15 @@ const router = useRouter();
         <li>Bezpieczna (logowanie <b>odciskiem palca)</b></li>
         <li>Nie wysyła zbędnych powiadomień</li>
         <li>Prosta i lekka, pozwala na rozwiązywanie quizów</li>
+        <li>Wspiera języki: <b>polski</b> i <b>angielski</b></li>
       </ul>
       <div class="flex">
-        <Button
-          class="border-1 rounded text-xl font-bold p-5 cursor-pointer my-6"
-          @click="router"
+        <RouterLink
+          to="/apks/quiz-app.apk"
+          target="_blank"
+          class="border-1 rounded text-xl font-bold p-5 cursor-pointer my-6 flex gap-4 items-center hover:bg-blue-400 transition-all"
           >POBIERZ .APK <Download :size="18"
-        /></Button>
+        /></RouterLink>
       </div>
     </section>
     <section>
