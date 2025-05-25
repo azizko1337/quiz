@@ -41,10 +41,12 @@ class AiService {
             properties: {
               question: {
                 type: Type.STRING,
+                maxLength: 50,
               },
               image: {
                 type: Type.STRING,
                 nullable: true,
+                maxLength: 50,
                 description:
                   "Bezpośredni link do obrazka pytania, może być null. Obrazek musisz znaleźć w internecie.",
               },
@@ -57,13 +59,8 @@ class AiService {
                   required: ["answer", "isCorrect"],
                   properties: {
                     answer: {
+                      maxLength: 30,
                       type: Type.STRING,
-                    },
-                    image: {
-                      type: Type.STRING,
-                      nullable: true,
-                      description:
-                        "Bezpośredni link do obrazka odpowiedzi, może być null. Obrazek musisz znaleźć w internecie.",
                     },
                     isCorrect: {
                       type: Type.BOOLEAN,
