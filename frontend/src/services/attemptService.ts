@@ -99,13 +99,7 @@ export const attemptService = {
     const { data } = await apolloClient.mutate({
       mutation: gql`
         mutation DeleteQuizAttempt($id: ID!) {
-          deleteQuizAttempt(id: $id) {
-            id
-            quizId
-            userId
-            score
-            createdAt
-          }
+          deleteQuizAttempt(id: $id)
         }
       `,
       variables: { id },

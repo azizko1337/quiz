@@ -8,6 +8,22 @@ import { Play, Pencil, Plus } from "lucide-vue-next";
 import { attemptService, type QuizAttempt } from "@/services/attemptService";
 import { ref, onMounted } from "vue";
 import { questionService, type Question } from "@/services/questionService";
+import {
+  ContextMenu,
+  ContextMenuCheckboxItem,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuLabel,
+  ContextMenuRadioGroup,
+  ContextMenuRadioItem,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
+import { toast } from "vue-sonner";
 
 const { attempt } = defineProps<{
   attempt: QuizAttempt;
@@ -51,48 +67,75 @@ async function startQuiz() {
   }
 }
 
+async function deleteAttempt() {
+  if (attempt) {
+    try {
+      await attemptService.deleteQuizAttempt(attempt.id);
+      await window.location.reload();
+    } catch (error) {
+      console.error("Failed to delete attempt:", error);
+      toast.error("Nie udało się usunąć podejścia");
+    }
+  }
+}
+
 onMounted(async () => {
   quiz.value = await quizService.getQuiz(attempt.quizId);
   questions.value = await questionService.getQuestions(attempt.quizId);
   console.log("qqq", questions.value.length);
 });
-
-console.log(userStore, quiz);
 </script>
 <template>
-  <div
-    class="flex gap-8 justify-between w-full max-w-[650px] rounded-lg px-4 py-3 shadow-2xl border-2"
-  >
-    <div class="flex flex-col">
-      <h2 class="text-lg font-bold">{{ quiz?.title }}</h2>
-      <p v-if="quiz?.description" class="text-md text-gray-500">
-        {{ quiz?.description }}
-      </p>
-      <div class="grow p-1"></div>
-      <p class="text-sm text-accent">
-        Wynik:
-        <Badge
-          >{{
-            Math.round(((attempt?.score ?? 0) / questions.length) * 100)
-          }}%</Badge
+  <ContextMenu>
+    <ContextMenuTrigger class="w-full max-w-[650px]"
+      ><div
+        class="flex gap-8 justify-between w-full rounded-lg px-4 py-3 shadow-2xl border-2 cursor-context-menu"
+      >
+        <div class="flex flex-col">
+          <h2 class="text-lg font-bold">{{ quiz?.title }}</h2>
+          <p v-if="quiz?.description" class="text-md text-gray-500">
+            {{ quiz?.description }}
+          </p>
+          <div class="grow p-1"></div>
+          <p class="text-sm text-accent">
+            Wynik:
+            <Badge
+              >{{
+                Math.round(((attempt?.score ?? 0) / questions.length) * 100)
+              }}%</Badge
+            >
+          </p>
+          <p class="text-sm text-accent">
+            Podejście rozpoczęte
+            <Badge>{{ formatDate(attempt?.createdAt ?? "") }}</Badge>
+          </p>
+          <p class="text-sm text-accent">
+            <Badge v-if="quiz?.isPublic" variant="outline">Publiczny</Badge>
+            <Badge v-else variant="outline">Niepubliczny</Badge>
+          </p>
+        </div>
+        <div class="flex flex-col justify-end items-stretch gap-2">
+          <Button class="border-1 w-full" @click="continueQuiz"
+            >Uruchom podejście <Play :size="14"
+          /></Button>
+          <Button class="border-1 w-full" @click="startQuiz"
+            >Nowe podejście <Plus :size="14"
+          /></Button>
+        </div></div
+    ></ContextMenuTrigger>
+    <ContextMenuContent class="bg-white">
+      <ContextMenuItem
+        class="hover:bg-blue-200 transition-colors cursor-pointer"
+        @click="deleteAttempt"
+        >Usuń podejście</ContextMenuItem
+      >
+      <RouterLink :to="`/quizzes/${attempt.quizId}/edit`">
+        <ContextMenuItem
+          class="hover:bg-blue-200 transition-colors cursor-pointer"
+          v-if="userStore?.user?.id === quiz?.authorId"
+          >Edytuj quiz</ContextMenuItem
         >
-      </p>
-      <p class="text-sm text-accent">
-        Podejście rozpoczęte
-        <Badge>{{ formatDate(attempt?.createdAt ?? "") }}</Badge>
-      </p>
-      <p class="text-sm text-accent">
-        <Badge v-if="quiz?.isPublic" variant="outline">Publiczny</Badge>
-        <Badge v-else variant="outline">Niepubliczny</Badge>
-      </p>
-    </div>
-    <div class="flex flex-col justify-end items-stretch gap-2">
-      <Button class="border-1 w-full" @click="continueQuiz"
-        >Uruchom podejście <Play :size="14"
-      /></Button>
-      <Button class="border-1 w-full" @click="startQuiz"
-        >Nowe podejście <Plus :size="14"
-      /></Button>
-    </div>
-  </div>
+      </RouterLink>
+    </ContextMenuContent>
+  </ContextMenu>
 </template>
