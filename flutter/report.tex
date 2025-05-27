@@ -1,0 +1,159 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[a4paper, left=3.7cm, right=3.7cm, top=3cm, bottom=2cm]{geometry}
+
+\title{Projekt PAM - aplikacja służąca do rozwiązywania testów}
+\author{Antoni Załupka}
+
+\begin{document}
+	\thispagestyle{empty}
+	
+	
+	\vspace{4cm}
+	
+	\rule{\linewidth}{2mm} 
+	
+	\begin{center}
+		\huge \textbf{Projektowanie Aplikacji Mobilnych} \\
+		\huge {Aplikacja służąca do rozwiązywania testów} \\
+	\end{center}
+	
+	\rule{\linewidth}{0.5mm} 
+	
+	\vspace{2cm}
+	
+	\begin{center}
+		\Large{Antoni Załupka} \\
+		\Large{Numer indeksu: 351120} \\
+		\Large{III rok, grupa PAW2} \\
+		
+	\end{center}
+	
+	
+	\vspace{15cm}
+	
+	\begin{center}
+		\Large{2025, Uniwersytet Śląski}
+	\end{center}
+	
+	\newpage
+	
+	\section{Wstęp}
+		Celem realizacji niniejszego projektu było zaprojektowanie i zaimplementowanie mobilnej aplikacji edukacyjnej w formie quizów, przeznaczonej na urządzenia z systemem Android i stworzonej z wykorzystaniem technologii Flutter. Aplikacja korzysta z tego samego interfejsu API, co równolegle rozwijana wersja przeglądarkowa, co zapewnia spójność działania oraz ułatwia dalszy rozwój systemu.
+		
+		Quizy dostępne w aplikacji nie służą jedynie do weryfikacji wiedzy użytkownika, lecz mają przede wszystkim charakter edukacyjny. Każde pytanie umożliwia natychmiastowe sprawdzenie poprawności odpowiedzi oraz ewentualną jej zmianę, co pozwala użytkownikowi na naukę poprzez interakcję i natychmiastową informację zwrotną.
+		
+		\subsection*{Wymagania funkcjonalne}
+		\begin{itemize}
+			\item Możliwość logowania do aplikacji z wykorzystaniem danych uwierzytelniających oraz metod biometrycznych (odcisk palca);
+			\item Pobieranie danych z API, w tym quizów oraz historii podejść użytkownika;
+			\item Rozwiązywanie quizów i zapisywanie wyników;
+			\item Przeglądanie historii podejść w dedykowanej zakładce;
+			\item Możliwość wylogowania się z konta.
+		\end{itemize}
+		
+		\subsection*{Wymagania niefunkcjonalne}
+		\begin{itemize}
+			\item Intuicyjny i prosty interfejs użytkownika;
+			\item Wysoka responsywność aplikacji na różnych urządzeniach z systemem Android;
+			\item Bezpieczna obsługa danych użytkownika (uwierzytelnianie biometryczne, bezpieczne przechowywanie tokenów dostępowych JWT);
+			\item Wydajna z API (możliwie minimalna ilość zapytań);
+			\item Utrzymanie spójności z funkcjonalnościami wersji webowej.
+		\end{itemize}
+	
+	\section{Specyfikacja zewnętrzna}
+		Aplikacja jest przejrzysta i prosta w obsłudze.
+		\begin{enumerate}
+		\item \textbf{Instalacja aplikacji:}
+			\begin{itemize}
+			\item Na ten moment aplikację można pobrać na stronie \texttt{https://quiz.azalupka.cc/mobile}.
+			\end{itemize}
+		\item \textbf{Ekran powitalny:}
+			\begin{itemize}
+			\item Po uruchomieniu zobaczysz logo i przycisk „Zaloguj się”.
+			\item Dotknij przycisku „Zaloguj się”, aby przejść dalej.
+			\end{itemize}
+		\item \textbf{Logowanie:}
+			\begin{itemize}
+			\item Wpisz swój e-mail oraz hasło, następnie dotknij „Zaloguj się”.
+			\item Jeśli urządzenie obsługuje biometrię i logowałeś się już wcześniej, możesz zalogować się odciskiem palca, dotykając przycisku „Zaloguj się odciskiem palca”.
+			\end{itemize}
+		\item \textbf{Przeglądanie quizów:}
+			\begin{itemize}
+			\item Po zalogowaniu wyświetli się lista dostępnych quizów.
+			\item Dotknij przycisku „Start” na karcie wybranego quizu, aby rozpocząć podejście.
+			\end{itemize}
+		\item \textbf{Rozwiązywanie quizu:}
+			\begin{itemize}
+			\item Każde pytanie wyświetli się osobno.
+			\item Zaznacz odpowiedź, dotykając pola wyboru obok tekstu.
+			\item Aby zobaczyć prawidłowe odpowiedzi, dotknij ikony oka w prawym górnym rogu pytania.
+			\end{itemize}
+		\item \textbf{Wynik quizu:}
+			\begin{itemize}
+			\item Wynik wyświetla się na bieżąco na dole ekranu. Pasek procentowy pokazuje odsetek poprawnych odpowiedzi.
+			\end{itemize}
+		\item \textbf{Historia podejść:}
+			\begin{itemize}
+			\item Na dolnym pasku nawigacji dotknij „Moje podejścia”.
+			\item Zobaczysz listę swoich quizów z wynikami.
+			\item Dotknij przycisku „Nowe” lub „Kontynuuj” na karcie, aby rozpocząć lub wznowić próbę.
+			\end{itemize}
+		\item \textbf{Profil i wylogowanie:}
+			\begin{itemize}
+			\item Na dolnym pasku nawigacji wybierz „Profil”.
+			\item Zobaczysz powitanie ze swoim imieniem i przycisk „Wyloguj się”.
+			\item Dotknij „Wyloguj się”, aby zakończyć sesję.
+			\end{itemize}
+		\end{enumerate}
+	
+	\section{Specyfikacja wewnętrzna}
+		Aplikacja mobilna została zrealizowana w technologii Flutter, z wykorzystaniem architektury opartej na podziale na warstwy prezentacji, logiki biznesowej oraz dostępu do danych. Struktura projektu umożliwia łatwą rozbudowę oraz modyfikację przez innych programistów.
+
+		\subsection*{Struktura aplikacji}
+			Kod źródłowy podzielony jest na warstwy, którym fizycznie odpowiadają katalogi na dysku:
+			\begin{itemize}
+				\item \textbf{Warstwa prezentacji} -- komponenty interfejsu użytkownika (ekrany - widżety, m.in.: ekrany logowania, quizów, profilu, historii podejść);
+				\item \textbf{Warstwa komunikacji} -- serwisy komunikujące się z API GraphQL (m.in.: \texttt{AuthService}, \texttt{QuizService}, \texttt{QuestionService});
+				\item \textbf{Modele danych} -- na ich podstawie serwisy tworzą obiekty z pozyskanych z backendu danych (\texttt{UserModel}, \texttt{Quiz}, \texttt{QuizAttempt}, \texttt{Question}, \texttt{Answer});
+				\item \textbf{Stan aplikacji} -- większość widgetów posiada własny stan, aplikacja zawiera jeden provider, służący do przechowywania danych obecnie zalogowanego użytkownika (\texttt{UserProvider});
+				\item \textbf{l10n} -- pliki lokalizacyjne (język polski i angielski).
+			\end{itemize}
+
+		\subsection*{Główne elementy aplikacji}
+			\begin{itemize}
+				\item \textbf{Ekrany (Screens):} Grupują widżety, tak aby uzyskać konkretną funkcjonalność dla użytkownika. Przykładowe ekrany: \texttt{LoginScreen}, \texttt{QuizzesScreen}, \texttt{AttemptsScreen}, \texttt{ProfileScreen}, \texttt{AttemptScreen}. Nawigacja odbywa się za pomocą \texttt{BottomNavigationBar} oraz \texttt{Navigator}.
+				\item \textbf{Widżety (Widgets):} Komponenty takie jak \texttt{QuizCard}, \texttt{QuizAttemptCard}, \texttt{QuestionCard} odpowiadają za prezentację pojedynczych quizów, podejść oraz pytań.
+				\item \textbf{Provider:} Do zarządzania stanem zalogowanego użytkownika wykorzystano wzorzec Provider (\texttt{UserProvider}), co pozwala na łatwy dostęp do danych użytkownika w całej aplikacji.
+				\item \textbf{Serwisy:} Warstwa serwisów odpowiada za komunikację z backendem poprzez GraphQL. Każdy serwis (np. \texttt{QuizService}, \texttt{QuizAttemptService}, \texttt{QuestionService}) posiada metody do pobierania i zapisywania danych. W GraphQL są to odpowiednio (z języka angielskiego) \textbf{queries} oraz \textbf{mutations}
+				\item \textbf{Modele danych:} Każdy typ danych pobierany z API posiada swój model z metodami serializacji/deserializacji.
+			\end{itemize}
+
+		\subsection*{Wykorzystane API i biblioteki}
+			\begin{itemize}
+				\item \textbf{Flutter} -- framework do budowy aplikacji mobilnych;
+				\item \textbf{graphql\_flutter} -- obsługa zapytań GraphQL do backendu;
+				\item \textbf{provider} -- przechowywanie stanu z danymi zalogowanego użytkownika na łamach całej aplikacji;
+				\item \textbf{local\_auth} -- obsługa biometrii (odcisk palca);
+				\item \textbf{flutter\_secure\_storage} -- bezpieczne przechowywanie tokenu JWT i danych użytkownika;
+				\item \textbf{intl, flutter\_localizations} -- obsługa wielu języków.
+			\end{itemize}
+
+		\subsection*{Informacje dotyczące kodu i uruchamiania}
+			\begin{itemize}
+				\item Przed uruchomieniem należy skonfigurować w pliku \texttt{lib/main.dart} wpisać poprawny adres backendu poprzez edycję następującej linijki: \\
+				\texttt{AuthService().initClient("https://apiquiz.azalupka.cc");}
+				\item Do uruchomienia aplikacji wymagane jest środowisko Flutter (zalecana wersja SDK zgodna z \texttt{pubspec.yaml}).
+				\item Aby uruchomić aplikację na emulatorze lub urządzeniu fizycznym, wystarczy wykonać polecenie \texttt{flutter run} w katalogu projektu.
+				\item Do budowy pliku APK służy polecenie \texttt{flutter build apk}.
+			\end{itemize}
+
+		Aplikacja została zaprojektowana w sposób umożliwiający łatwe dodawanie nowych funkcjonalności, ekranów oraz integrację z innymi usługami backendowymi.
+	
+	\section{Wnioski}
+	In this section we compare various aspects of self-attention layers to the recurrent and convolu
+	
+	
+\end{document}
