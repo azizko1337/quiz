@@ -1,0 +1,5 @@
+\babel@toc {polish}{}\relax 
+\contentsline {section}{\numberline {1}Wstęp}{3}{}%
+\contentsline {section}{\numberline {2}Specyfikacja zewnętrzna}{3}{}%
+\contentsline {section}{\numberline {3}Specyfikacja wewnętrzna}{6}{}%
+\contentsline {section}{\numberline {4}Wnioski}{8}{}%
