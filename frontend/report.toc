@@ -1,10 +1,26 @@
 \babel@toc {polish}{}\relax 
 \contentsline {section}{\numberline {1}Wstęp}{3}{}%
 \contentsline {section}{\numberline {2}Założenia}{3}{}%
-\contentsline {section}{\numberline {3}Kontekst}{3}{}%
-\contentsline {section}{\numberline {4}Wykorzystane technologie}{3}{}%
-\contentsline {section}{\numberline {5}Struktura projektu}{4}{}%
-\contentsline {section}{\numberline {6}Wdrożenie aplikacji}{4}{}%
-\contentsline {section}{\numberline {7}Galeria efektów końcowych}{4}{}%
-\contentsline {section}{\numberline {8}Perspektywy rozwoju}{5}{}%
-\contentsline {section}{\numberline {9}Wnioski}{6}{}%
+\contentsline {subsection}{\numberline {2.1}Wymagania funkcjonalne}{3}{}%
+\contentsline {subsection}{\numberline {2.2}Wymagania niefunkcjonalne}{3}{}%
+\contentsline {section}{\numberline {3}Wykorzystane technologie}{3}{}%
+\contentsline {subsection}{\numberline {3.1}Backend}{3}{}%
+\contentsline {subsection}{\numberline {3.2}Frontend}{4}{}%
+\contentsline {section}{\numberline {4}Struktura projektu}{4}{}%
+\contentsline {section}{\numberline {5}Zarządzanie stanem aplikacji}{4}{}%
+\contentsline {subsection}{\numberline {5.1}Pinia Store: \texttt {useUserStore}}{4}{}%
+\contentsline {subsection}{\numberline {5.2}Pinia Store: \texttt {useAttemptStore}}{5}{}%
+\contentsline {section}{\numberline {6}Interfejs użytkownika i system komponentów}{5}{}%
+\contentsline {subsection}{\numberline {6.1}System designu}{6}{}%
+\contentsline {subsection}{\numberline {6.2}Struktura komponentów}{6}{}%
+\contentsline {subsection}{\numberline {6.3}System formularzy}{6}{}%
+\contentsline {subsection}{\numberline {6.4}Responsywność}{6}{}%
+\contentsline {subsection}{\numberline {6.5}Edytor pytań quizu oparty o \texttt {json-editor-vue}}{7}{}%
+\contentsline {section}{\numberline {7}Komunikacja z API GraphQL}{7}{}%
+\contentsline {subsection}{\numberline {7.1}Konfiguracja Apollo Client}{7}{}%
+\contentsline {subsection}{\numberline {7.2}Struktura zapytań i mutacji}{8}{}%
+\contentsline {subsection}{\numberline {7.3}Implementacja serwisów}{8}{}%
+\contentsline {section}{\numberline {8}Wdrożenie aplikacji}{8}{}%
+\contentsline {section}{\numberline {9}Galeria efektów końcowych}{9}{}%
+\contentsline {section}{\numberline {10}Perspektywy rozwoju}{10}{}%
+\contentsline {section}{\numberline {11}Wnioski}{10}{}%
